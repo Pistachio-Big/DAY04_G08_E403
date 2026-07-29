@@ -9,7 +9,7 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: "Hỏi lại người dùng khi thiếu thông tin (như handle, URL) hoặc cần xin xác nhận trước khi gửi/đăng bài."
     parameters:
       type: object
       properties:

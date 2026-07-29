@@ -1,1 +1,4 @@
 version,author,changed_artifact,artifact_version,prompt_hash,tools_hash,reason,hypothesis,metric_name,metric_before,metric_after,run_file
+v1, Huy-Anh, system_prompt.md, v1,-,-,-, Agent luôn pick 1 tool để sử dụng,-, 0.7, 0.8, run_eval.py
+v2, Huy-Anh, system_prompt.md, v2,-,-,-, Missing Account/Handle --> đoán username,-, 0.8, 0.9, run_eval.py
+v3, Huy-Anh, tools.yaml & system_promp.md, v3,-,-,-,  Agent bịa URL do và gọi thẳng tool send để đăng bài mà không hỏi lại,-, 0.9, 1.0, run_eval.py
