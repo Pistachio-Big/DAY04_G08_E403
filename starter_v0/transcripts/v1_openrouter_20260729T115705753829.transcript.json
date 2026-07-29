@@ -1,0 +1,34 @@
+{
+  "transcript_id": "v1_openrouter_20260729T115705753829",
+  "version": "v1",
+  "artifact_version": "v1+p4462e9456cb2+t6cdb53d5d7b8",
+  "prompt_hash": "4462e9456cb2fa030e5b6d9d10668841988052558a44b445d11e6af63a073f10",
+  "tools_hash": "6cdb53d5d7b8de80d60b298b1357f462cedbedfae261d5ba60b08ccc401687c5",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\admin\\Desktop\\AITHUCCHIEN\\DAY04_G08_E403\\starter_v0\\artifacts\\system_prompt_v1.md",
+  "tools": "C:\\Users\\admin\\Desktop\\AITHUCCHIEN\\DAY04_G08_E403\\starter_v0\\artifacts\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-07-29T11:57:05",
+  "updated_at": "2026-07-29T11:57:07",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-07-29T11:57:05",
+      "user": "Tóm tắt 5 tweet mới nhất giúp mình",
+      "status": "answered",
+      "assistant_text": "Bạn vui lòng cung cấp tên tài khoản Twitter hoặc handle mà bạn muốn tóm tắt tweet mới nhất nhé!",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": "Bạn vui lòng cung cấp tên tài khoản Twitter hoặc handle mà bạn muốn tóm tắt tweet mới nhất nhé!",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [],
+      "ended_at": "2026-07-29T11:57:07"
+    }
+  ]
+}

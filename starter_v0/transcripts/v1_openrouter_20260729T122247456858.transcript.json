@@ -1,0 +1,34 @@
+{
+  "transcript_id": "v1_openrouter_20260729T122247456858",
+  "version": "v1",
+  "artifact_version": "v1+p1e0802c88606+t6cdb53d5d7b8",
+  "prompt_hash": "1e0802c88606213145ca6c08da16a0f806cf0053395e2aca9f5a5845263b8e7d",
+  "tools_hash": "6cdb53d5d7b8de80d60b298b1357f462cedbedfae261d5ba60b08ccc401687c5",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\admin\\Desktop\\AITHUCCHIEN\\DAY04_G08_E403\\starter_v0\\artifacts\\system_prompt_v1.md",
+  "tools": "C:\\Users\\admin\\Desktop\\AITHUCCHIEN\\DAY04_G08_E403\\starter_v0\\artifacts\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-07-29T12:22:47",
+  "updated_at": "2026-07-29T12:22:48",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-07-29T12:22:47",
+      "user": "tìm tweet mới nhất",
+      "status": "answered",
+      "assistant_text": "Bạn có thể cho tôi biết tên tài khoản hoặc handle Twitter mà bạn muốn tìm tweet mới nhất không?",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": "Bạn có thể cho tôi biết tên tài khoản hoặc handle Twitter mà bạn muốn tìm tweet mới nhất không?",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [],
+      "ended_at": "2026-07-29T12:22:48"
+    }
+  ]
+}

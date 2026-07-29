@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import re
 from datetime import datetime
@@ -259,11 +260,32 @@ def print_table(results: list[dict[str, Any]], summary: dict[str, Any]) -> None:
         print(f"{key}: {value}")
 
 
+def auto_version(version_log: Path, prompt_hash: str, tools_hash: str) -> tuple[str, str]:
+    """Return (next_version, previous_metric) by reading version_log.csv."""
+    if not version_log.exists() or version_log.stat().st_size == 0:
+        return "v0", ""
+    rows = []
+    with open(version_log, newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            rows.append(row)
+    if not rows:
+        return "v0", ""
+    last = rows[-1]
+    prev_metric = last.get("metric_after", "")
+    if last.get("prompt_hash") == prompt_hash and last.get("tools_hash") == tools_hash:
+        return last.get("version", "v0"), prev_metric
+    last_version = last.get("version", "v0")
+    num = 0
+    if last_version.startswith("v") and last_version[1:].isdigit():
+        num = int(last_version[1:])
+    return f"v{num + 1}", prev_metric
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run Research Agent live evals.")
     parser.add_argument("--phase", choices=["B"], default="B")
     parser.add_argument("--suite", choices=["base", "group", "cross", "extension"], default="base", help="Run label saved to JSON; does not filter --eval-cases.")
-    parser.add_argument("--version", required=True)
+    parser.add_argument("--version", default=None, help="Artifact version label. Auto-increments if omitted.")
     parser.add_argument("--provider", choices=["openai", "openrouter", "anthropic", "gemini"], required=True)
     parser.add_argument("--model", default=None)
     parser.add_argument("--system-prompt", type=Path, default=ARTIFACTS_DIR / "system_prompt.md")
@@ -273,6 +295,19 @@ def main() -> None:
     args = parser.parse_args()
 
     system_prompt = args.system_prompt.read_text(encoding="utf-8")
+
+    from versioning import file_hash
+    current_prompt_hash = file_hash(args.system_prompt)
+    current_tools_hash = file_hash(args.tools)
+    version_log = ARTIFACTS_DIR / "version_log.csv"
+
+    if args.version is None:
+        resolved_version, prev_metric = auto_version(version_log, current_prompt_hash, current_tools_hash)
+        args.version = resolved_version
+        print(f"Auto-detected version: {args.version}")
+    else:
+        _, prev_metric = auto_version(version_log, current_prompt_hash, current_tools_hash)
+
     artifact_version = build_artifact_version(args.version, args.system_prompt, args.tools)
     provider = make_provider(args.provider)
     selected_model = args.model or getattr(provider, "default_model", None)
@@ -356,6 +391,28 @@ def main() -> None:
     print_table(results, summary)
     print(f"\nArtifact version: {artifact_version.artifact_version}")
     print(f"\nSaved: {out_path}")
+
+    log_row = {
+        "version": args.version,
+        "author": "LucMinhDuc_2A202601918",
+        "changed_artifact": args.suite,
+        "artifact_version": artifact_version.artifact_version,
+        "prompt_hash": artifact_version.prompt_hash,
+        "tools_hash": artifact_version.tools_hash,
+        "reason": "",
+        "hypothesis": "",
+        "metric_name": "case_accuracy",
+        "metric_before": prev_metric,
+        "metric_after": summary.get("case_accuracy", ""),
+        "run_file": out_path.name,
+    }
+    write_header = not version_log.exists() or version_log.stat().st_size == 0
+    with open(version_log, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=list(log_row.keys()))
+        if write_header:
+            writer.writeheader()
+        writer.writerow(log_row)
+    print(f"Version log updated: {version_log}")
 
 
 if __name__ == "__main__":

@@ -201,8 +201,8 @@ Streamlit được khuyến nghị vì dựng nhanh, nhưng nhóm có thể dùn
 Nếu chọn Streamlit:
 
 1. Chạy `python -m pip install "streamlit>=1.30.0"` và thêm `streamlit>=1.30.0` vào `requirements.txt`.
-2. Tạo `app.py` trong `starter_v0/`.
-3. Tái sử dụng `run_model_tool_loop` từ `chat.py` để UI và CLI dùng cùng agent loop; tiếp tục dùng cùng prompt/tool declarations với eval.
+
+
 4. Hiển thị request/response, từng round với tool name + args + result/error, version/artifact, và lưu transcript. Không render/log secrets.
 5. Chạy:
 

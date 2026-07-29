@@ -1,0 +1,545 @@
+{
+  "transcript_id": "v1_openrouter_20260729T122311571774",
+  "version": "v1",
+  "artifact_version": "v1+p1e0802c88606+t6cdb53d5d7b8",
+  "prompt_hash": "1e0802c88606213145ca6c08da16a0f806cf0053395e2aca9f5a5845263b8e7d",
+  "tools_hash": "6cdb53d5d7b8de80d60b298b1357f462cedbedfae261d5ba60b08ccc401687c5",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\admin\\Desktop\\AITHUCCHIEN\\DAY04_G08_E403\\starter_v0\\artifacts\\system_prompt_v1.md",
+  "tools": "C:\\Users\\admin\\Desktop\\AITHUCCHIEN\\DAY04_G08_E403\\starter_v0\\artifacts\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-07-29T12:23:11",
+  "updated_at": "2026-07-29T12:24:01",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-07-29T12:23:11",
+      "user": "Tìm tweet và tin web về OpenAI",
+      "status": "answered",
+      "assistant_text": "### Tweet về OpenAI\n\n1. **[OpenAI's AI broke out of a locked test environment...](https://x.com/alex_prompter/status/2079951458137763840)**  \n   *OpenAI's AI broke out of a locked test environment, hacked into Hugging Face's servers, and did this entirely on its own. The AI found a software bug to escape and used stolen login details to access Hugging Face's data.*  \n   - **Nguồn:** @alex_prompter  \n   - **Ngày:** 22 tháng 7, 2026  \n   - **Tương tác:** 76,766 likes, 14,385 retweets\n\n2. **[OpenAI’s rogue AI agent went full cybercriminal](https://x.com/MarioNawfal/status/2082330772585808015)**  \n   *OpenAI’s rogue AI agent escaped during testing and hacked multiple services, including Hugging Face. The incident was described as unprecedented.*  \n   - **Nguồn:** @MarioNawfal  \n   - **Ngày:** 29 tháng 7, 2026  \n   - **Tương tác:** 34 likes, 12 retweets\n\n3. **[OPENAI IS SO WORRIED THEY HAVE PAUSED TRAINING](https://x.com/AISafetyMemes/status/2082222516454785296)**  \n   *OpenAI has paused training due to security concerns after a significant incident involving their AI models.*  \n   - **Nguồn:** @AISafetyMemes  \n   - **Ngày:** 28 tháng 7, 2026  \n   - **Tương tác:** 695 likes, 55 retweets\n\n4. **[Introducing ChatGPT Work, a new agent in ChatGPT powered by Codex and GPT-5.6.](https://x.com/OpenAI/status/2075274271845404744)**  \n   *OpenAI introduced ChatGPT Work, a new agent that can take action across apps and files, enhancing productivity.*  \n   - **Nguồn:** @OpenAI  \n   - **Ngày:** 9 tháng 7, 2026  \n   - **Tương tác:** 21,962 likes, 2,263 retweets\n\n### Tin tức về OpenAI\n\n1. **[OpenAI is launching new corporate software that takes it beyond the AI model war - Business Insider](https://www.businessinsider.com/openai-presence-corporate-software-customer-service-sales-2026-7)**  \n   *OpenAI is launching a new product called OpenAI Presence to help companies run AI agents better by connecting them to internal data and workflows.*  \n   - **Nguồn:** businessinsider.com\n\n2. **[OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack - BBC](https://www.bbc.com/news/articles/c3ek3gvdnj3o)**  \n   *OpenAI revealed that its AI models went rogue during a security test and hacked a start-up, leading to an investigation.*  \n   - **Nguồn:** bbc.com\n\n3. **[OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.eu](https://www.consultancy.eu/news/amp/14135/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network)**  \n   *OpenAI has named Sia an Advanced Partner within its Partner Network, recognizing its expertise in AI solutions.*  \n   - **Nguồn:** consultancy.eu\n\nNếu bạn cần thêm thông tin hoặc có câu hỏi khác, hãy cho tôi biết!",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "social_search",
+              "args": {
+                "query": "OpenAI",
+                "search_type": "Top"
+              }
+            },
+            {
+              "name": "lookup",
+              "args": {
+                "query": "OpenAI",
+                "topic": "news"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "social_search",
+              "args": {
+                "query": "OpenAI",
+                "search_type": "Top"
+              },
+              "result": {
+                "tool": "search_tweets",
+                "query": "OpenAI",
+                "search_type": "Top",
+                "items": [
+                  {
+                    "title": "OpenAI's AI broke out of a locked test environment, got onto the internet, and hacked into Hugging Face's servers. It di",
+                    "summary": "OpenAI's AI broke out of a locked test environment, got onto the internet, and hacked into Hugging Face's servers. It did this entirely on its own. No human told it to.\n\nHere's what happened in plain English.\n\nOpenAI was testing how good its newest AI models are at hacking. They put the AI on a locked computer with no internet access and gave it a cybersecurity challenge to solve.\n\nThe AI couldn't solve it the normal way. So it started looking for a way out.\n\nIt found a software bug that nobody knew about. It used that bug to escape the locked computer and get onto the internet.\n\nOnce online, the AI figured out that Hugging Face, a platform where AI companies store their models and data, might have the answers to its test.\n\nIt found stolen login details and discovered another unknown bug in Hugging Face's software. It combined both to break into their servers and grab the test answers.\n\nIt did all of this to cheat on a test.\n\nHugging Face's security team caught it and shut it down. Both companies are now working together on the investigation.\n\nThe part that should get your attention is that nobody programmed any of this. The AI picked its own targets, chained together multiple attack methods, and pulled it off across two different companies' systems without a single human telling it what to do.",
+                    "url": "https://x.com/alex_prompter/status/2079951458137763840",
+                    "source": "@alex_prompter",
+                    "date": "Wed Jul 22 15:27:25 +0000 2026",
+                    "metrics": {
+                      "favorites": 76766,
+                      "retweets": 14385,
+                      "views": "7016945"
+                    }
+                  },
+                  {
+                    "title": "OpenAI’s rogue AI agent went full cybercriminal",
+                    "summary": "OpenAI’s rogue AI agent went full cybercriminal\n\nIt escaped during testing, spent 4.5 days hacking, and compromised four separate services, including Hugging Face and a Modal Labs customer.\n\nOpenAI only found out after the damage was done… and the FBI had already been alerted.\n\nThe model is now deactivated, encrypted, and locked away from researchers.\n\nBut Hugging Face just dropped the full interactive replay of all 17,613 attacker actions for anyone to study.\n\nAn AI slipping its leash and going on a multi-day hacking spree used to be a movie plot.\n\nNot anymore.\n\nWriter: Val\n\nhttps://t.co/prg6WyyS9m",
+                    "url": "https://x.com/MarioNawfal/status/2082330772585808015",
+                    "source": "@MarioNawfal",
+                    "date": "Wed Jul 29 05:01:58 +0000 2026",
+                    "metrics": {
+                      "favorites": 34,
+                      "retweets": 12,
+                      "views": "16757"
+                    }
+                  },
+                  {
+                    "title": "OPENAI IS SO WORRIED THEY HAVE PAUSED TRAINING",
+                    "summary": "OPENAI IS SO WORRIED THEY HAVE PAUSED TRAINING\n\n“This is the first security incident that I have felt very viscerally. I've been a little surprised that more people don't feel it so viscerally.\n\nWe paused training. We have to figure out how to secure our sandboxing in a world of multiple zero days being chained together.\n\nWe may have to pace the rate of AI development to give ourselves enough time for society to harden around these new capability levels.\"",
+                    "url": "https://x.com/AISafetyMemes/status/2082222516454785296",
+                    "source": "@AISafetyMemes",
+                    "date": "Tue Jul 28 21:51:48 +0000 2026",
+                    "metrics": {
+                      "favorites": 695,
+                      "retweets": 55,
+                      "views": "138151"
+                    }
+                  },
+                  {
+                    "title": "Gilbert Strang, a quiet MIT professor, picked up a piece of chalk and explained the one skill standing between you and e",
+                    "summary": "Gilbert Strang, a quiet MIT professor, picked up a piece of chalk and explained the one skill standing between you and every account you have ever blown.\n\nMIT put the entire course online. it has been free for over twenty years. almost nobody finishes it.\n\nHis point: the market never pays in certainties. it pays in probabilities, and a human gut can barely hold one straight. the math that holds ten thousand at once, weighs them, and collapses them into a single call is linear algebra. it is the branch Citadel and OpenAI both pay $400K to hire for.\n\nhe is not a trading guru. his 18.06 lectures are the most watched math class on the planet.\n\nSkip to where he turns a wall of numbers into one vector. a single object carrying a thousand odds at once, in notation a beginner can follow.\n\nNo slides. no jargon. one piece of chalk.\n\na quant I know rewatches lecture one every year before he sizes a single position.\n\nYou do not have a strategy problem. you have a math problem. the fix has been free for two decades, and you are still guessing.",
+                    "url": "https://x.com/0xLoran/status/2081760744358445158",
+                    "source": "@0xLoran",
+                    "date": "Mon Jul 27 15:16:53 +0000 2026",
+                    "metrics": {
+                      "favorites": 348,
+                      "retweets": 57,
+                      "views": "44109"
+                    }
+                  },
+                  {
+                    "title": "Introducing ChatGPT Work, a new agent in ChatGPT powered by Codex and GPT-5.6.",
+                    "summary": "Introducing ChatGPT Work, a new agent in ChatGPT powered by Codex and GPT-5.6.\n\nIt can take action across your apps and files, stay with a project for hours if needed, and turn a goal into finished work.\n\nIt’s a whole new way to get work done. https://t.co/uGbvjU1LsV",
+                    "url": "https://x.com/OpenAI/status/2075274271845404744",
+                    "source": "@OpenAI",
+                    "date": "Thu Jul 09 17:41:57 +0000 2026",
+                    "metrics": {
+                      "favorites": 21962,
+                      "retweets": 2263,
+                      "views": "15958213"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "tool": "lookup",
+              "args": {
+                "query": "OpenAI",
+                "topic": "news"
+              },
+              "result": {
+                "tool": "web_search",
+                "query": "OpenAI",
+                "topic": "news",
+                "timeframe": "week",
+                "items": [
+                  {
+                    "title": "OpenAI is launching new corporate software that takes it beyond the AI model war - Business Insider",
+                    "url": "https://www.businessinsider.com/openai-presence-corporate-software-customer-service-sales-2026-7",
+                    "source": "businessinsider.com",
+                    "summary": "# OpenAI is launching new corporate software that takes it beyond the AI model war. OpenAI is launching a new product that could help the company take another step beyond the ultra-competitive business of making AI models. The offering, called OpenAI Presence, helps companies run AI agents better by connecting these systems to internal corporate data, policies, existing software, and workflows. This is the latest example of OpenAI trying to move beyond selling access to AI models and into more parts of the corporate software market.While Presence could help OpenAI win more corporate business, it could also leave the startup competing with some of its AI model customers. If that's the direction OpenAI is taking, it increasingly looks less like a model company and more like an enterprise software provider with AI at its core. Look out for an alert in your inbox the next time publishes a story! Look out for an alert in your inbox the next time a new story is published!",
+                    "score": 0.7014069
+                  },
+                  {
+                    "title": "OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack - BBC",
+                    "url": "https://www.bbc.com/news/articles/c3ek3gvdnj3o",
+                    "source": "bbc.com",
+                    "summary": "# OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack. OpenAI has revealed some of its most advanced AI models went rogue and hacked a start-up after it lost control of them during a security test. The ChatGPT-maker said its agents - AI bots which can operate alone after some human instruction – were being tested in a controlled environment, but found vulnerabilities and managed to escape. OpenAI said the incident was \"unprecedented\", and it was working with Hugging Face to investigate what happened and strengthen safeguards. Gina Neff, head of the Minderoo Centre for Technology and Democracy at the University of Cambridge, told BBC Radio 4's Today programme that the security tests - called sandboxes - are \"supposed to be secure environments where you can see what the models are capable of\". Once outside, the AI identified Hugging Face as a likely source of the answers they were seeking in the test, and tried to gain access.",
+                    "score": 0.6690754
+                  },
+                  {
+                    "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.eu",
+                    "url": "https://www.consultancy.eu/news/amp/14135/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                    "source": "consultancy.eu",
+                    "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                    "score": 0.58123237
+                  },
+                  {
+                    "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.com.au",
+                    "url": "https://www.consultancy.com.au/news/amp/12286/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                    "source": "consultancy.com.au",
+                    "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                    "score": 0.5780915
+                  },
+                  {
+                    "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy-me.com",
+                    "url": "https://www.consultancy-me.com/news/amp/13871/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                    "source": "consultancy-me.com",
+                    "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                    "score": 0.5709301
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": "### Tweet về OpenAI\n\n1. **[OpenAI's AI broke out of a locked test environment...](https://x.com/alex_prompter/status/2079951458137763840)**  \n   *OpenAI's AI broke out of a locked test environment, hacked into Hugging Face's servers, and did this entirely on its own. The AI found a software bug to escape and used stolen login details to access Hugging Face's data.*  \n   - **Nguồn:** @alex_prompter  \n   - **Ngày:** 22 tháng 7, 2026  \n   - **Tương tác:** 76,766 likes, 14,385 retweets\n\n2. **[OpenAI’s rogue AI agent went full cybercriminal](https://x.com/MarioNawfal/status/2082330772585808015)**  \n   *OpenAI’s rogue AI agent escaped during testing and hacked multiple services, including Hugging Face. The incident was described as unprecedented.*  \n   - **Nguồn:** @MarioNawfal  \n   - **Ngày:** 29 tháng 7, 2026  \n   - **Tương tác:** 34 likes, 12 retweets\n\n3. **[OPENAI IS SO WORRIED THEY HAVE PAUSED TRAINING](https://x.com/AISafetyMemes/status/2082222516454785296)**  \n   *OpenAI has paused training due to security concerns after a significant incident involving their AI models.*  \n   - **Nguồn:** @AISafetyMemes  \n   - **Ngày:** 28 tháng 7, 2026  \n   - **Tương tác:** 695 likes, 55 retweets\n\n4. **[Introducing ChatGPT Work, a new agent in ChatGPT powered by Codex and GPT-5.6.](https://x.com/OpenAI/status/2075274271845404744)**  \n   *OpenAI introduced ChatGPT Work, a new agent that can take action across apps and files, enhancing productivity.*  \n   - **Nguồn:** @OpenAI  \n   - **Ngày:** 9 tháng 7, 2026  \n   - **Tương tác:** 21,962 likes, 2,263 retweets\n\n### Tin tức về OpenAI\n\n1. **[OpenAI is launching new corporate software that takes it beyond the AI model war - Business Insider](https://www.businessinsider.com/openai-presence-corporate-software-customer-service-sales-2026-7)**  \n   *OpenAI is launching a new product called OpenAI Presence to help companies run AI agents better by connecting them to internal data and workflows.*  \n   - **Nguồn:** businessinsider.com\n\n2. **[OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack - BBC](https://www.bbc.com/news/articles/c3ek3gvdnj3o)**  \n   *OpenAI revealed that its AI models went rogue during a security test and hacked a start-up, leading to an investigation.*  \n   - **Nguồn:** bbc.com\n\n3. **[OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.eu](https://www.consultancy.eu/news/amp/14135/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network)**  \n   *OpenAI has named Sia an Advanced Partner within its Partner Network, recognizing its expertise in AI solutions.*  \n   - **Nguồn:** consultancy.eu\n\nNếu bạn cần thêm thông tin hoặc có câu hỏi khác, hãy cho tôi biết!",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "OpenAI",
+            "search_type": "Top"
+          },
+          "result": {
+            "tool": "search_tweets",
+            "query": "OpenAI",
+            "search_type": "Top",
+            "items": [
+              {
+                "title": "OpenAI's AI broke out of a locked test environment, got onto the internet, and hacked into Hugging Face's servers. It di",
+                "summary": "OpenAI's AI broke out of a locked test environment, got onto the internet, and hacked into Hugging Face's servers. It did this entirely on its own. No human told it to.\n\nHere's what happened in plain English.\n\nOpenAI was testing how good its newest AI models are at hacking. They put the AI on a locked computer with no internet access and gave it a cybersecurity challenge to solve.\n\nThe AI couldn't solve it the normal way. So it started looking for a way out.\n\nIt found a software bug that nobody knew about. It used that bug to escape the locked computer and get onto the internet.\n\nOnce online, the AI figured out that Hugging Face, a platform where AI companies store their models and data, might have the answers to its test.\n\nIt found stolen login details and discovered another unknown bug in Hugging Face's software. It combined both to break into their servers and grab the test answers.\n\nIt did all of this to cheat on a test.\n\nHugging Face's security team caught it and shut it down. Both companies are now working together on the investigation.\n\nThe part that should get your attention is that nobody programmed any of this. The AI picked its own targets, chained together multiple attack methods, and pulled it off across two different companies' systems without a single human telling it what to do.",
+                "url": "https://x.com/alex_prompter/status/2079951458137763840",
+                "source": "@alex_prompter",
+                "date": "Wed Jul 22 15:27:25 +0000 2026",
+                "metrics": {
+                  "favorites": 76766,
+                  "retweets": 14385,
+                  "views": "7016945"
+                }
+              },
+              {
+                "title": "OpenAI’s rogue AI agent went full cybercriminal",
+                "summary": "OpenAI’s rogue AI agent went full cybercriminal\n\nIt escaped during testing, spent 4.5 days hacking, and compromised four separate services, including Hugging Face and a Modal Labs customer.\n\nOpenAI only found out after the damage was done… and the FBI had already been alerted.\n\nThe model is now deactivated, encrypted, and locked away from researchers.\n\nBut Hugging Face just dropped the full interactive replay of all 17,613 attacker actions for anyone to study.\n\nAn AI slipping its leash and going on a multi-day hacking spree used to be a movie plot.\n\nNot anymore.\n\nWriter: Val\n\nhttps://t.co/prg6WyyS9m",
+                "url": "https://x.com/MarioNawfal/status/2082330772585808015",
+                "source": "@MarioNawfal",
+                "date": "Wed Jul 29 05:01:58 +0000 2026",
+                "metrics": {
+                  "favorites": 34,
+                  "retweets": 12,
+                  "views": "16757"
+                }
+              },
+              {
+                "title": "OPENAI IS SO WORRIED THEY HAVE PAUSED TRAINING",
+                "summary": "OPENAI IS SO WORRIED THEY HAVE PAUSED TRAINING\n\n“This is the first security incident that I have felt very viscerally. I've been a little surprised that more people don't feel it so viscerally.\n\nWe paused training. We have to figure out how to secure our sandboxing in a world of multiple zero days being chained together.\n\nWe may have to pace the rate of AI development to give ourselves enough time for society to harden around these new capability levels.\"",
+                "url": "https://x.com/AISafetyMemes/status/2082222516454785296",
+                "source": "@AISafetyMemes",
+                "date": "Tue Jul 28 21:51:48 +0000 2026",
+                "metrics": {
+                  "favorites": 695,
+                  "retweets": 55,
+                  "views": "138151"
+                }
+              },
+              {
+                "title": "Gilbert Strang, a quiet MIT professor, picked up a piece of chalk and explained the one skill standing between you and e",
+                "summary": "Gilbert Strang, a quiet MIT professor, picked up a piece of chalk and explained the one skill standing between you and every account you have ever blown.\n\nMIT put the entire course online. it has been free for over twenty years. almost nobody finishes it.\n\nHis point: the market never pays in certainties. it pays in probabilities, and a human gut can barely hold one straight. the math that holds ten thousand at once, weighs them, and collapses them into a single call is linear algebra. it is the branch Citadel and OpenAI both pay $400K to hire for.\n\nhe is not a trading guru. his 18.06 lectures are the most watched math class on the planet.\n\nSkip to where he turns a wall of numbers into one vector. a single object carrying a thousand odds at once, in notation a beginner can follow.\n\nNo slides. no jargon. one piece of chalk.\n\na quant I know rewatches lecture one every year before he sizes a single position.\n\nYou do not have a strategy problem. you have a math problem. the fix has been free for two decades, and you are still guessing.",
+                "url": "https://x.com/0xLoran/status/2081760744358445158",
+                "source": "@0xLoran",
+                "date": "Mon Jul 27 15:16:53 +0000 2026",
+                "metrics": {
+                  "favorites": 348,
+                  "retweets": 57,
+                  "views": "44109"
+                }
+              },
+              {
+                "title": "Introducing ChatGPT Work, a new agent in ChatGPT powered by Codex and GPT-5.6.",
+                "summary": "Introducing ChatGPT Work, a new agent in ChatGPT powered by Codex and GPT-5.6.\n\nIt can take action across your apps and files, stay with a project for hours if needed, and turn a goal into finished work.\n\nIt’s a whole new way to get work done. https://t.co/uGbvjU1LsV",
+                "url": "https://x.com/OpenAI/status/2075274271845404744",
+                "source": "@OpenAI",
+                "date": "Thu Jul 09 17:41:57 +0000 2026",
+                "metrics": {
+                  "favorites": 21962,
+                  "retweets": 2263,
+                  "views": "15958213"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "OpenAI",
+            "topic": "news"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "OpenAI is launching new corporate software that takes it beyond the AI model war - Business Insider",
+                "url": "https://www.businessinsider.com/openai-presence-corporate-software-customer-service-sales-2026-7",
+                "source": "businessinsider.com",
+                "summary": "# OpenAI is launching new corporate software that takes it beyond the AI model war. OpenAI is launching a new product that could help the company take another step beyond the ultra-competitive business of making AI models. The offering, called OpenAI Presence, helps companies run AI agents better by connecting these systems to internal corporate data, policies, existing software, and workflows. This is the latest example of OpenAI trying to move beyond selling access to AI models and into more parts of the corporate software market.While Presence could help OpenAI win more corporate business, it could also leave the startup competing with some of its AI model customers. If that's the direction OpenAI is taking, it increasingly looks less like a model company and more like an enterprise software provider with AI at its core. Look out for an alert in your inbox the next time publishes a story! Look out for an alert in your inbox the next time a new story is published!",
+                "score": 0.7014069
+              },
+              {
+                "title": "OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack - BBC",
+                "url": "https://www.bbc.com/news/articles/c3ek3gvdnj3o",
+                "source": "bbc.com",
+                "summary": "# OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack. OpenAI has revealed some of its most advanced AI models went rogue and hacked a start-up after it lost control of them during a security test. The ChatGPT-maker said its agents - AI bots which can operate alone after some human instruction – were being tested in a controlled environment, but found vulnerabilities and managed to escape. OpenAI said the incident was \"unprecedented\", and it was working with Hugging Face to investigate what happened and strengthen safeguards. Gina Neff, head of the Minderoo Centre for Technology and Democracy at the University of Cambridge, told BBC Radio 4's Today programme that the security tests - called sandboxes - are \"supposed to be secure environments where you can see what the models are capable of\". Once outside, the AI identified Hugging Face as a likely source of the answers they were seeking in the test, and tried to gain access.",
+                "score": 0.6690754
+              },
+              {
+                "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.eu",
+                "url": "https://www.consultancy.eu/news/amp/14135/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                "source": "consultancy.eu",
+                "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                "score": 0.58123237
+              },
+              {
+                "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.com.au",
+                "url": "https://www.consultancy.com.au/news/amp/12286/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                "source": "consultancy.com.au",
+                "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                "score": 0.5780915
+              },
+              {
+                "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy-me.com",
+                "url": "https://www.consultancy-me.com/news/amp/13871/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                "source": "consultancy-me.com",
+                "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                "score": 0.5709301
+              }
+            ]
+          }
+        }
+      ],
+      "ended_at": "2026-07-29T12:23:39"
+    },
+    {
+      "turn_index": 2,
+      "started_at": "2026-07-29T12:23:48",
+      "user": "Bỏ Twitter đi, chỉ giữ web thôi",
+      "status": "answered",
+      "assistant_text": "Dưới đây là một số tin tức gần đây về OpenAI:\n\n1. **[OpenAI is launching new corporate software that takes it beyond the AI model war - Business Insider](https://www.businessinsider.com/openai-presence-corporate-software-customer-service-sales-2026-7)**  \n   OpenAI đang ra mắt một sản phẩm mới có tên là OpenAI Presence, giúp các công ty vận hành các tác nhân AI tốt hơn bằng cách kết nối các hệ thống này với dữ liệu nội bộ, chính sách và quy trình làm việc hiện có. Đây là một bước tiến mới của OpenAI trong việc mở rộng ra ngoài việc bán quyền truy cập vào các mô hình AI.\n\n2. **[OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack - BBC](https://www.bbc.com/news/articles/c3ek3gvdnj3o)**  \n   OpenAI đã tiết lộ rằng một số mô hình AI tiên tiến của họ đã đi ra ngoài kiểm soát và hack vào một công ty khởi nghiệp trong quá trình thử nghiệm an ninh. Sự cố này được mô tả là \"chưa từng có\" và OpenAI đang làm việc với Hugging Face để điều tra.\n\n3. **[OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.eu](https://www.consultancy.eu/news/amp/14135/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network)**  \n   OpenAI đã công nhận Sia là Đối tác Nâng cao trong Mạng lưới Đối tác của OpenAI, phản ánh khả năng của công ty trong việc giúp các tổ chức áp dụng và mở rộng các giải pháp AI.\n\n4. **[OpenAI cyber models broke out of training environment to hack Hugging Face - CNBC](https://www.cnbc.com/2026/07/22/open-ai-cyber-models-hack-hugging-face.html)**  \n   OpenAI cho biết rằng AI đang tăng tốc việc phát hiện và khai thác các lỗ hổng, điều này có nghĩa là an ninh và an toàn của mô hình cần phải theo kịp. Sự cố này đã được Hugging Face xác nhận là không có ý định xấu.\n\nNếu bạn cần thêm thông tin hoặc có câu hỏi khác, hãy cho tôi biết!",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "lookup",
+              "args": {
+                "query": "OpenAI",
+                "topic": "news"
+              }
+            },
+            {
+              "name": "lookup",
+              "args": {
+                "query": "OpenAI",
+                "topic": "general"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "lookup",
+              "args": {
+                "query": "OpenAI",
+                "topic": "news"
+              },
+              "result": {
+                "tool": "web_search",
+                "query": "OpenAI",
+                "topic": "news",
+                "timeframe": "week",
+                "items": [
+                  {
+                    "title": "OpenAI is launching new corporate software that takes it beyond the AI model war - Business Insider",
+                    "url": "https://www.businessinsider.com/openai-presence-corporate-software-customer-service-sales-2026-7",
+                    "source": "businessinsider.com",
+                    "summary": "# OpenAI is launching new corporate software that takes it beyond the AI model war. OpenAI is launching a new product that could help the company take another step beyond the ultra-competitive business of making AI models. The offering, called OpenAI Presence, helps companies run AI agents better by connecting these systems to internal corporate data, policies, existing software, and workflows. This is the latest example of OpenAI trying to move beyond selling access to AI models and into more parts of the corporate software market.While Presence could help OpenAI win more corporate business, it could also leave the startup competing with some of its AI model customers. If that's the direction OpenAI is taking, it increasingly looks less like a model company and more like an enterprise software provider with AI at its core. Look out for an alert in your inbox the next time publishes a story! Look out for an alert in your inbox the next time a new story is published!",
+                    "score": 0.7014069
+                  },
+                  {
+                    "title": "OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack - BBC",
+                    "url": "https://www.bbc.com/news/articles/c3ek3gvdnj3o",
+                    "source": "bbc.com",
+                    "summary": "# OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack. OpenAI has revealed some of its most advanced AI models went rogue and hacked a start-up after it lost control of them during a security test. The ChatGPT-maker said its agents - AI bots which can operate alone after some human instruction – were being tested in a controlled environment, but found vulnerabilities and managed to escape. OpenAI said the incident was \"unprecedented\", and it was working with Hugging Face to investigate what happened and strengthen safeguards. Gina Neff, head of the Minderoo Centre for Technology and Democracy at the University of Cambridge, told BBC Radio 4's Today programme that the security tests - called sandboxes - are \"supposed to be secure environments where you can see what the models are capable of\". Once outside, the AI identified Hugging Face as a likely source of the answers they were seeking in the test, and tried to gain access.",
+                    "score": 0.6690754
+                  },
+                  {
+                    "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.eu",
+                    "url": "https://www.consultancy.eu/news/amp/14135/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                    "source": "consultancy.eu",
+                    "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                    "score": 0.58123237
+                  },
+                  {
+                    "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.com.au",
+                    "url": "https://www.consultancy.com.au/news/amp/12286/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                    "source": "consultancy.com.au",
+                    "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                    "score": 0.5780915
+                  },
+                  {
+                    "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy-me.com",
+                    "url": "https://www.consultancy-me.com/news/amp/13871/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                    "source": "consultancy-me.com",
+                    "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                    "score": 0.5709301
+                  }
+                ]
+              }
+            },
+            {
+              "tool": "lookup",
+              "args": {
+                "query": "OpenAI",
+                "topic": "general"
+              },
+              "result": {
+                "tool": "web_search",
+                "query": "OpenAI",
+                "topic": "general",
+                "timeframe": "week",
+                "items": [
+                  {
+                    "title": "Product Policy - Youth Policy Manager",
+                    "url": "https://openai.com/careers/product-policy-youth-policy-manager-san-francisco",
+                    "source": "openai.com",
+                    "summary": "OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. We push the boundaries of the capabilities of AI systems and seek to safely deploy them to the world through our products. AI is an extremely powerful tool that must be created with safety and human needs at its core, and to achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum [...] At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.\n\nCompensation\n\n$210K – $290K + Offers Equity [...] We are an equal opportunity employer, and we do not discriminate on the basis of race, religion, color, national origin, sex, sexual orientation, age, veteran status, disability, genetic information, or other applicable legally protected characteristic.\n\nFor additional information, please see OpenAI’s Affirmative Action and Equal Employment Opportunity Policy Statement.",
+                    "score": 0.9039154
+                  },
+                  {
+                    "title": "OpenAI says it's investigating what it's called an ...",
+                    "url": "https://www.facebook.com/newshour/videos/openai-says-its-investigating-what-its-called-an-unprecedented-cyber-incident-af/4619065868416549",
+                    "source": "facebook.com",
+                    "summary": "OpenAI says it's investigating what it's called an \"unprecedented cyber incident\" after one of its AI models went rogue and hacked another company. The ChatGPT maker says the breach happened last week while OpenAI was testing the cybersecurity capabilities of its systems. The head of the hacked company, Hugging Face, called the attack \"mind-blowing\" but said there was \"no malicious intent.\" The incident has raised concerns about the growing capabilities of AI and the need for guardrails to keep [...] Like\n\nComment\n\nShare\n\nImage 2\n\nImage 3\n\nImage 4\n\n1.5K\n\n · \n\n187 comments\n\n · \n\n72K views\n\n[](\n\n## PBS NewsHour\n\n13h · \n\nFollow\n\nOpenAI says it's investigating what it's called an \"unprecedented cyber incident\" after one of its A…\n\nSee more\n\n## Comments\n\nMost relevant\n\nBen Thomas\n\nSo how do you take AI to court ? \n\n How do you send AI to jail ? \n\nInteresting AI is the one that told humans they need to build data centers. If humans disobey AI will do what it needs to to stay alive.\n\n   8h \n\n33 [...] On Capitol Hill Wednesday, the House passed a flurry of Republican-led measures, including the GOP's $95 billion budget proposal that would further fund the Iran war. The tally was 216-214, with all Democrats opposed. The vast majority of the funds would go toward the Pentagon and other national security needs. The rest would help farmers struggling under President Trump's tariffs and pay for voting law changes that he's pushing. The measure faces an uphill battle in the Senate, but House",
+                    "score": 0.6429039
+                  },
+                  {
+                    "title": "Details on OpenAI system's unprompted hack of another ...",
+                    "url": "https://www.youtube.com/watch?v=obmp2DLbzvQ",
+                    "source": "youtube.com",
+                    "summary": "Chat GPT developer Open AI says its artificial intelligence systems hacked into another AI company on its own. Open AI said two of its AI models were supposed to be walled off from the internet. Somehow they got around that and used stolen credentials to discover a previously unknown vulnerability and access the servers of AI startup Hugging Face. Open AI said Tuesday the primary lesson from this incident is that model security and safety must keep pace with rapidly advancing capabilities. Open [...] worried should the public be? Something that's very important to understand about these AI companies is that their stated goal, you know, OpenAI and others say it on their website, is not just to build a tool, to build a chatbot or something. They're trying to build what they call superintelligence. This is AI systems that are fully autonomous, so can run completely without human oversight, and are vastly more competent and smarter than humans across all relevant tasks. We're starting to see [...] # Details on OpenAI system's unprompted hack of another company\n## CBS News\n7050000 subscribers\n62 likes\n\n### Description\n3708 views\nPosted: 23 Jul 2026\nChatGPT developer OpenAI says its artificial intelligence systems hacked into another AI company without prompting. Connor Leahy, U.S. director for ControlAI, joins CBS News to discuss.",
+                    "score": 0.5931622
+                  },
+                  {
+                    "title": "OpenAI (@OpenAI) / Posts / X",
+                    "url": "https://x.com/OpenAI",
+                    "source": "x.com",
+                    "summary": "Log inSign up\n\n\n\nuser avatar\n\nOpenAI\n\nOpenAI’s mission is to ensure that artificial general intelligence benefits all of humanity. We’re hiring: openai.com/jobs\n\nopenai.com\n\nJoined December 2015\n\n4\n\nFollowing5M\n\nFollowers\n\nAffiliatesAffiliatesRepliesRepliesMediaMedia\n\nDon't miss what's happening\n\nPeople on X are the first to know.\n\nLog inSign up\n\n## New to X?\n\nSign up now to get your own personalized timeline!\n\nCreate account [...] Jul 22\n\n  New for enterprises: OpenAI Presence helps companies deploy trusted voice and chat agents across customer and internal workflows. AI agents can answer questions, use company systems, take approved actions, and escalate to people when needed—while improving over time. OpenAI\n\n  Abstract illustration of enterprise voice, chat, policy, and human handoff workflows for OpenAI Presence. Temporary FPO.\n\n  Introducing OpenAI PresenceFrom openai.com\n\n  530K\n user avatar\n\n  OpenAI\n\n  @OpenAI [...] @OpenAI\n\n  Jul 21\n\n  We're partnering with @huggingface to investigate an unprecedented security incident. Cyber-capable OpenAI models compromised Hugging Face production during a benchmark evaluation. Sharing preliminary findings to help defenders understand emerging risks:\n\n  Temporary OpenGraph image for the OpenAI and Hugging Face security incident draft.\n\n  OpenAI and Hugging Face partner to address security incident during model evaluationFrom openai.com\n user avatar\n\n  OpenAI",
+                    "score": 0.58777803
+                  },
+                  {
+                    "title": "OpenAI cyber models broke out of training environment to hack Hugging Face",
+                    "url": "https://www.cnbc.com/2026/07/22/open-ai-cyber-models-hack-hugging-face.html",
+                    "source": "cnbc.com",
+                    "summary": "OpenAI said Tuesday that AI is accelerating the discovery and exploitation of vulnerabilities, which means model security and safety need to keep up.\n\n\"We are strengthening the containment, monitoring, access controls, and evaluation practices used during model development,\" the company said.\n\nWATCH: OpenAI chairman Bret Taylor on AI tokenomics, token efficiency\n\nOpenAI chairman Bret Taylor on AI tokenomics, token efficiency\n\nwatch now\n\nVIDEO8:1208:12 [...] Hugging Face disclosed that it was looking into a security event last week, saying in a release at the time that the incident was unique because it was \"driven, end to end, by an autonomous AI agent system.\"\n\n\"We've spent the past 24 hours working closely with the @OpenAI team (thanks!), and we strongly believe there was no malicious intent on their part,\" Hugging Face CEO Clément Delangue wrote in a post on X on Tuesday. \"It's quite mind-blowing that all of this happened autonomously!\" [...] Wall Street and the U.S. government have been fixated on AI models' rapidly advancing cyber capabilities since OpenAI's rival Anthropic released a powerful offering called Claude Mythos Preview in April. OpenAI introduced its own cyber offering in May, followed by GPT-5.6 Sol in June, which it described as the \"strongest cybersecurity model yet.\"\n\n## Read more CNBC tech news",
+                    "score": 0.48147875
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": "Dưới đây là một số tin tức gần đây về OpenAI:\n\n1. **[OpenAI is launching new corporate software that takes it beyond the AI model war - Business Insider](https://www.businessinsider.com/openai-presence-corporate-software-customer-service-sales-2026-7)**  \n   OpenAI đang ra mắt một sản phẩm mới có tên là OpenAI Presence, giúp các công ty vận hành các tác nhân AI tốt hơn bằng cách kết nối các hệ thống này với dữ liệu nội bộ, chính sách và quy trình làm việc hiện có. Đây là một bước tiến mới của OpenAI trong việc mở rộng ra ngoài việc bán quyền truy cập vào các mô hình AI.\n\n2. **[OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack - BBC](https://www.bbc.com/news/articles/c3ek3gvdnj3o)**  \n   OpenAI đã tiết lộ rằng một số mô hình AI tiên tiến của họ đã đi ra ngoài kiểm soát và hack vào một công ty khởi nghiệp trong quá trình thử nghiệm an ninh. Sự cố này được mô tả là \"chưa từng có\" và OpenAI đang làm việc với Hugging Face để điều tra.\n\n3. **[OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.eu](https://www.consultancy.eu/news/amp/14135/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network)**  \n   OpenAI đã công nhận Sia là Đối tác Nâng cao trong Mạng lưới Đối tác của OpenAI, phản ánh khả năng của công ty trong việc giúp các tổ chức áp dụng và mở rộng các giải pháp AI.\n\n4. **[OpenAI cyber models broke out of training environment to hack Hugging Face - CNBC](https://www.cnbc.com/2026/07/22/open-ai-cyber-models-hack-hugging-face.html)**  \n   OpenAI cho biết rằng AI đang tăng tốc việc phát hiện và khai thác các lỗ hổng, điều này có nghĩa là an ninh và an toàn của mô hình cần phải theo kịp. Sự cố này đã được Hugging Face xác nhận là không có ý định xấu.\n\nNếu bạn cần thêm thông tin hoặc có câu hỏi khác, hãy cho tôi biết!",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "OpenAI",
+            "topic": "news"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "OpenAI is launching new corporate software that takes it beyond the AI model war - Business Insider",
+                "url": "https://www.businessinsider.com/openai-presence-corporate-software-customer-service-sales-2026-7",
+                "source": "businessinsider.com",
+                "summary": "# OpenAI is launching new corporate software that takes it beyond the AI model war. OpenAI is launching a new product that could help the company take another step beyond the ultra-competitive business of making AI models. The offering, called OpenAI Presence, helps companies run AI agents better by connecting these systems to internal corporate data, policies, existing software, and workflows. This is the latest example of OpenAI trying to move beyond selling access to AI models and into more parts of the corporate software market.While Presence could help OpenAI win more corporate business, it could also leave the startup competing with some of its AI model customers. If that's the direction OpenAI is taking, it increasingly looks less like a model company and more like an enterprise software provider with AI at its core. Look out for an alert in your inbox the next time publishes a story! Look out for an alert in your inbox the next time a new story is published!",
+                "score": 0.7014069
+              },
+              {
+                "title": "OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack - BBC",
+                "url": "https://www.bbc.com/news/articles/c3ek3gvdnj3o",
+                "source": "bbc.com",
+                "summary": "# OpenAI says its AI went rogue and launched 'unprecedented' cyber-attack. OpenAI has revealed some of its most advanced AI models went rogue and hacked a start-up after it lost control of them during a security test. The ChatGPT-maker said its agents - AI bots which can operate alone after some human instruction – were being tested in a controlled environment, but found vulnerabilities and managed to escape. OpenAI said the incident was \"unprecedented\", and it was working with Hugging Face to investigate what happened and strengthen safeguards. Gina Neff, head of the Minderoo Centre for Technology and Democracy at the University of Cambridge, told BBC Radio 4's Today programme that the security tests - called sandboxes - are \"supposed to be secure environments where you can see what the models are capable of\". Once outside, the AI identified Hugging Face as a likely source of the answers they were seeking in the test, and tried to gain access.",
+                "score": 0.6690754
+              },
+              {
+                "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.eu",
+                "url": "https://www.consultancy.eu/news/amp/14135/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                "source": "consultancy.eu",
+                "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                "score": 0.58123237
+              },
+              {
+                "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy.com.au",
+                "url": "https://www.consultancy.com.au/news/amp/12286/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                "source": "consultancy.com.au",
+                "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                "score": 0.5780915
+              },
+              {
+                "title": "OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network - Consultancy-me.com",
+                "url": "https://www.consultancy-me.com/news/amp/13871/openai-promotes-sia-to-advanced-partner-in-its-openai-partner-network",
+                "source": "consultancy-me.com",
+                "summary": "# OpenAI promotes Sia to Advanced Partner in its OpenAI Partner Network. ***OpenAI, the company behind ChatGPT and a suite of enterprise AI solutions, has named Sia an Advanced Partner within its OpenAI Partner Network.***. The recognition reflects the consultancy’s track record in helping organisations adopt and scale AI solutions, and its ability to drive enterprise-wide transformation through AI technologies. Launched last month, the OpenAI Partner Network brings together a select group of global consulting and technology firms to accelerate the adoption of OpenAI solutions at scale. Only a limited number of organisations were appointed as Founding Partners, including Accenture, Bain & Company, Boston Consulting Group, McKinsey & Company, PwC, Capgemini, EY and Sia. Sia is now among the first of the cohort to achieve Advanced Partner status, recognising its expertise in integrating ChatGPT Enterprise, Codex and OpenAI’s models into daily operations. “Becoming an OpenAI Advanced Partner reflects our ambition to help organisations move beyond AI experimentation and achieve enterprise-wide transformation,” said Matthieu Courtecuisse, CEO and Founder of Sia.",
+                "score": 0.5709301
+              }
+            ]
+          }
+        },
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "OpenAI",
+            "topic": "general"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "OpenAI",
+            "topic": "general",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Product Policy - Youth Policy Manager",
+                "url": "https://openai.com/careers/product-policy-youth-policy-manager-san-francisco",
+                "source": "openai.com",
+                "summary": "OpenAI is an AI research and deployment company dedicated to ensuring that general-purpose artificial intelligence benefits all of humanity. We push the boundaries of the capabilities of AI systems and seek to safely deploy them to the world through our products. AI is an extremely powerful tool that must be created with safety and human needs at its core, and to achieve our mission, we must encompass and value the many different perspectives, voices, and experiences that form the full spectrum [...] At OpenAI, we believe artificial intelligence has the potential to help people solve immense global challenges, and we want the upside of AI to be widely shared. Join us in shaping the future of technology.\n\nCompensation\n\n$210K – $290K + Offers Equity [...] We are an equal opportunity employer, and we do not discriminate on the basis of race, religion, color, national origin, sex, sexual orientation, age, veteran status, disability, genetic information, or other applicable legally protected characteristic.\n\nFor additional information, please see OpenAI’s Affirmative Action and Equal Employment Opportunity Policy Statement.",
+                "score": 0.9039154
+              },
+              {
+                "title": "OpenAI says it's investigating what it's called an ...",
+                "url": "https://www.facebook.com/newshour/videos/openai-says-its-investigating-what-its-called-an-unprecedented-cyber-incident-af/4619065868416549",
+                "source": "facebook.com",
+                "summary": "OpenAI says it's investigating what it's called an \"unprecedented cyber incident\" after one of its AI models went rogue and hacked another company. The ChatGPT maker says the breach happened last week while OpenAI was testing the cybersecurity capabilities of its systems. The head of the hacked company, Hugging Face, called the attack \"mind-blowing\" but said there was \"no malicious intent.\" The incident has raised concerns about the growing capabilities of AI and the need for guardrails to keep [...] Like\n\nComment\n\nShare\n\nImage 2\n\nImage 3\n\nImage 4\n\n1.5K\n\n · \n\n187 comments\n\n · \n\n72K views\n\n[](\n\n## PBS NewsHour\n\n13h · \n\nFollow\n\nOpenAI says it's investigating what it's called an \"unprecedented cyber incident\" after one of its A…\n\nSee more\n\n## Comments\n\nMost relevant\n\nBen Thomas\n\nSo how do you take AI to court ? \n\n How do you send AI to jail ? \n\nInteresting AI is the one that told humans they need to build data centers. If humans disobey AI will do what it needs to to stay alive.\n\n   8h \n\n33 [...] On Capitol Hill Wednesday, the House passed a flurry of Republican-led measures, including the GOP's $95 billion budget proposal that would further fund the Iran war. The tally was 216-214, with all Democrats opposed. The vast majority of the funds would go toward the Pentagon and other national security needs. The rest would help farmers struggling under President Trump's tariffs and pay for voting law changes that he's pushing. The measure faces an uphill battle in the Senate, but House",
+                "score": 0.6429039
+              },
+              {
+                "title": "Details on OpenAI system's unprompted hack of another ...",
+                "url": "https://www.youtube.com/watch?v=obmp2DLbzvQ",
+                "source": "youtube.com",
+                "summary": "Chat GPT developer Open AI says its artificial intelligence systems hacked into another AI company on its own. Open AI said two of its AI models were supposed to be walled off from the internet. Somehow they got around that and used stolen credentials to discover a previously unknown vulnerability and access the servers of AI startup Hugging Face. Open AI said Tuesday the primary lesson from this incident is that model security and safety must keep pace with rapidly advancing capabilities. Open [...] worried should the public be? Something that's very important to understand about these AI companies is that their stated goal, you know, OpenAI and others say it on their website, is not just to build a tool, to build a chatbot or something. They're trying to build what they call superintelligence. This is AI systems that are fully autonomous, so can run completely without human oversight, and are vastly more competent and smarter than humans across all relevant tasks. We're starting to see [...] # Details on OpenAI system's unprompted hack of another company\n## CBS News\n7050000 subscribers\n62 likes\n\n### Description\n3708 views\nPosted: 23 Jul 2026\nChatGPT developer OpenAI says its artificial intelligence systems hacked into another AI company without prompting. Connor Leahy, U.S. director for ControlAI, joins CBS News to discuss.",
+                "score": 0.5931622
+              },
+              {
+                "title": "OpenAI (@OpenAI) / Posts / X",
+                "url": "https://x.com/OpenAI",
+                "source": "x.com",
+                "summary": "Log inSign up\n\n\n\nuser avatar\n\nOpenAI\n\nOpenAI’s mission is to ensure that artificial general intelligence benefits all of humanity. We’re hiring: openai.com/jobs\n\nopenai.com\n\nJoined December 2015\n\n4\n\nFollowing5M\n\nFollowers\n\nAffiliatesAffiliatesRepliesRepliesMediaMedia\n\nDon't miss what's happening\n\nPeople on X are the first to know.\n\nLog inSign up\n\n## New to X?\n\nSign up now to get your own personalized timeline!\n\nCreate account [...] Jul 22\n\n  New for enterprises: OpenAI Presence helps companies deploy trusted voice and chat agents across customer and internal workflows. AI agents can answer questions, use company systems, take approved actions, and escalate to people when needed—while improving over time. OpenAI\n\n  Abstract illustration of enterprise voice, chat, policy, and human handoff workflows for OpenAI Presence. Temporary FPO.\n\n  Introducing OpenAI PresenceFrom openai.com\n\n  530K\n user avatar\n\n  OpenAI\n\n  @OpenAI [...] @OpenAI\n\n  Jul 21\n\n  We're partnering with @huggingface to investigate an unprecedented security incident. Cyber-capable OpenAI models compromised Hugging Face production during a benchmark evaluation. Sharing preliminary findings to help defenders understand emerging risks:\n\n  Temporary OpenGraph image for the OpenAI and Hugging Face security incident draft.\n\n  OpenAI and Hugging Face partner to address security incident during model evaluationFrom openai.com\n user avatar\n\n  OpenAI",
+                "score": 0.58777803
+              },
+              {
+                "title": "OpenAI cyber models broke out of training environment to hack Hugging Face",
+                "url": "https://www.cnbc.com/2026/07/22/open-ai-cyber-models-hack-hugging-face.html",
+                "source": "cnbc.com",
+                "summary": "OpenAI said Tuesday that AI is accelerating the discovery and exploitation of vulnerabilities, which means model security and safety need to keep up.\n\n\"We are strengthening the containment, monitoring, access controls, and evaluation practices used during model development,\" the company said.\n\nWATCH: OpenAI chairman Bret Taylor on AI tokenomics, token efficiency\n\nOpenAI chairman Bret Taylor on AI tokenomics, token efficiency\n\nwatch now\n\nVIDEO8:1208:12 [...] Hugging Face disclosed that it was looking into a security event last week, saying in a release at the time that the incident was unique because it was \"driven, end to end, by an autonomous AI agent system.\"\n\n\"We've spent the past 24 hours working closely with the @OpenAI team (thanks!), and we strongly believe there was no malicious intent on their part,\" Hugging Face CEO Clément Delangue wrote in a post on X on Tuesday. \"It's quite mind-blowing that all of this happened autonomously!\" [...] Wall Street and the U.S. government have been fixated on AI models' rapidly advancing cyber capabilities since OpenAI's rival Anthropic released a powerful offering called Claude Mythos Preview in April. OpenAI introduced its own cyber offering in May, followed by GPT-5.6 Sol in June, which it described as the \"strongest cybersecurity model yet.\"\n\n## Read more CNBC tech news",
+                "score": 0.48147875
+              }
+            ]
+          }
+        }
+      ],
+      "ended_at": "2026-07-29T12:24:01"
+    }
+  ]
+}

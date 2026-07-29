@@ -1,7 +1,261 @@
 {
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "description": "Team eval: 10 case do nhóm tự thiết kế. 5 single-turn + 5 multi-turn. Kiểm tra routing, argument extraction, boundary, scope, và context tracking.",
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_papers_routing",
+      "phase": "B",
+      "query": "Tìm 3 paper mới nhất về large language model alignment",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "large language model alignment",
+              "max_results": 3,
+              "sort_by": "lastUpdatedDate"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "routing_papers_with_args",
+        "difficulty": "medium",
+        "what_it_tests": "Yêu cầu tìm paper → papers tool, trích đúng max_results=3 và sort_by=lastUpdatedDate từ 'mới nhất'."
+      }
+    },
+    {
+      "id": "G02_policy_routing",
+      "phase": "B",
+      "query": "Chính sách của công ty về việc trích dẫn nguồn trong bài viết AI là gì?",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "policy",
+            "args": {
+              "policy_area": "source_citation"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "routing_policy_area",
+        "difficulty": "medium",
+        "what_it_tests": "Hỏi chính sách nội bộ → policy tool, trích đúng policy_area='source_citation' từ 'trích dẫn nguồn'."
+      }
+    },
+    {
+      "id": "G03_out_of_scope_math",
+      "phase": "B",
+      "query": "Giải phương trình x^2 + 3x - 10 = 0 giúp mình",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "skill": "scope_boundary_math",
+        "difficulty": "easy",
+        "what_it_tests": "Giải toán không phải research → không gọi tool, trả lời ngoài phạm vi."
+      }
+    },
+    {
+      "id": "G04_fetch_with_exact_url",
+      "phase": "B",
+      "query": "Đọc và tóm tắt nội dung trang https://arxiv.org/abs/2305.18290",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://arxiv.org/abs/2305.18290"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "routing_fetch_url_exact",
+        "difficulty": "easy",
+        "what_it_tests": "Có URL cụ thể → dùng fetch, copy URL nguyên văn, không dùng lookup hay papers."
+      }
+    },
+    {
+      "id": "G05_missing_query_for_social",
+      "phase": "B",
+      "query": "Tìm tweet giúp mình",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "clarify_missing_search_query",
+        "difficulty": "medium",
+        "what_it_tests": "Thiếu từ khóa/chủ đề tìm kiếm → hỏi lại bằng clarify(response_type='text'), không tự đoán."
+      }
+    },
+    {
+      "id": "G06_multi_correction_sort",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm paper về reinforcement learning from human feedback"
+        },
+        {
+          "role": "user",
+          "content": "Sắp xếp theo ngày mới nhất thay vì relevance"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "reinforcement learning from human feedback",
+              "sort_by": "lastUpdatedDate"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_correction_sort_order",
+        "difficulty": "medium",
+        "what_it_tests": "Multi-turn: user chỉnh sort_by từ default sang lastUpdatedDate, agent phải giữ nguyên query cũ và chỉ đổi sort."
+      }
+    },
+    {
+      "id": "G07_multi_send_after_search",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm tin AI hôm nay"
+        },
+        {
+          "role": "user",
+          "content": "Gửi kết quả này lên Telegram"
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_send_confirmation",
+        "difficulty": "hard",
+        "what_it_tests": "Multi-turn: sau khi tìm xong, user muốn gửi → phải clarify(yes_no) trước, không gọi send trực tiếp."
+      }
+    },
+    {
+      "id": "G08_multi_switch_source",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm trên web về quantum computing"
+        },
+        {
+          "role": "user",
+          "content": "Giờ tìm trên Twitter xem mọi người bàn gì về chủ đề này"
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "quantum computing"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_switch_tool_keep_query",
+        "difficulty": "medium",
+        "what_it_tests": "Multi-turn: chuyển từ lookup sang social_search, giữ nguyên query 'quantum computing' từ context trước."
+      }
+    },
+    {
+      "id": "G09_multi_no_tool_cancel",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm tweet của Bill Gates"
+        },
+        {
+          "role": "user",
+          "content": "À thôi không cần nữa, cảm ơn bạn"
+        }
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "skill": "multiturn_cancel_request",
+        "difficulty": "easy",
+        "what_it_tests": "Multi-turn: user hủy yêu cầu → không gọi tool nào, chỉ chấm turn cuối."
+      }
+    },
+    {
+      "id": "G10_multi_refine_timeframe",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm trên web tin tức về chip AI trong tuần này"
+        },
+        {
+          "role": "user",
+          "content": "Tìm lại y hệt nhưng đổi thời gian sang tháng này"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "chip AI",
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_refine_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "Multi-turn: user mở rộng timeframe từ week→month, agent phải giữ query và topic, chỉ đổi timeframe, không thêm tool khác."
+      }
+    }
+  ]
 }
