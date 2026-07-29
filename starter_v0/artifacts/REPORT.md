@@ -29,6 +29,7 @@ Research agent chuyên thu thập thông tin từ web, mạng xã hội (Twitter
 | policy | Tra cứu tài liệu policy nội bộ công ty | không |
 | format | Format dữ liệu thành văn bản (brief, sections, bullets, thread) | không |
 | send | Gửi nội dung đi (có cờ xác nhận) | không |
+| github | Tìm kiếm repository trên GitHub theo từ khóa, ngôn ngữ lập trình, chủ đề | có |
 
 ## A3. Câu hỏi mẫu để thử
 
