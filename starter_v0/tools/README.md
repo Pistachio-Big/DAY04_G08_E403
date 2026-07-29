@@ -18,7 +18,7 @@ Every `TOOL.md` uses the same fields:
 ```yaml
 ---
 name: tool_name
-track: core | bonus
+track: core | bonus | team_new
 kind: live_api | local_formatter | local_knowledge | action | control
 provider: Provider name if any
 requires_env: [ENV_VAR]
@@ -32,3 +32,5 @@ requires_confirmation: true   # only for write/action tools
 Core tools are enough to pass the base lab. `track: bonus` means optional or
 extension-only; it does not automatically earn bonus points. If its declaration
 stays in `tools.yaml`, the model can still see it and core routing may change.
+`track: team_new` marks a tool the team wrote themselves to satisfy the
+mandatory "at least one new tool" requirement.

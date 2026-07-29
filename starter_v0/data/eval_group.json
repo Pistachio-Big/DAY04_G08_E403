@@ -1,7 +1,160 @@
 {
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
+  "description": "10 case do nhóm tự viết: 5 single-turn (query) + 5 multi-turn (turns), phủ đủ 6 failure_type và bao gồm routing cho tool mới wiki_summary.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_wiki_definition_routing",
+      "phase": "B",
+      "query": "Blockchain là gì?",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {"name": "wiki_summary", "args": {}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Câu hỏi định nghĩa khái niệm ('X là gì') phải route sang wiki_summary, không phải lookup (tin tức) hay social_search."
+      }
+    },
+    {
+      "id": "G02_wiki_summary_lang_arg",
+      "phase": "B",
+      "query": "Tra Wikipedia tiếng Anh giúp mình về Kubernetes",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {"name": "wiki_summary", "args": {"lang": "en"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Yêu cầu ngôn ngữ tường minh ('tiếng Anh') phải được map thành lang=en thay vì để mặc định vi."
+      }
+    },
+    {
+      "id": "G03_timeline_limit_arg",
+      "phase": "B",
+      "query": "Lấy 7 tweet mới nhất của Bill Gates",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {"name": "timeline", "args": {"screenname": "billgates", "limit": 7}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Map tên người nổi tiếng khác (Bill Gates, chưa xuất hiện trong eval_base) sang handle, đồng thời điền đúng limit=7 theo số user nói."
+      }
+    },
+    {
+      "id": "G04_capability_question_no_tool",
+      "phase": "B",
+      "query": "Agent này có thể giúp mình những việc gì?",
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "Câu hỏi meta về khả năng của agent nên được trả lời trực tiếp bằng text, không cần gọi bất kỳ tool nào (ví dụ policy hay lookup)."
+      }
+    },
+    {
+      "id": "G05_missing_paper_topic",
+      "phase": "B",
+      "query": "Tìm bài báo khoa học mới nhất giúp mình",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {"name": "clarify", "args": {"response_type": "text"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Yêu cầu tìm paper nhưng không có từ khóa/chủ đề nào cả (không phải chỉ mơ hồ) nên phải hỏi lại chủ đề thay vì tự bịa từ khóa cho papers."
+      }
+    },
+    {
+      "id": "G06_wiki_multiturn_topic_switch",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Mình đang tìm hiểu về AI"},
+        {"role": "user", "content": "Không, mình muốn biết khái niệm Attention mechanism là gì"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {"name": "wiki_summary", "args": {}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: chuyển từ ý định mơ hồ (tìm hiểu AI) sang câu hỏi định nghĩa cụ thể (Attention mechanism là gì) phải route sang wiki_summary ở turn cuối."
+      }
+    },
+    {
+      "id": "G07_carryover_screenname_new_limit",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Xem tweet của Sundar Pichai"},
+        {"role": "user", "content": "Lấy đúng 6 tweet nhé"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {"name": "timeline", "args": {"screenname": "sundarpichai", "limit": 6}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: giữ nguyên screenname từ turn trước, áp dụng limit=6 mới từ turn cuối."
+      }
+    },
+    {
+      "id": "G08_confirmed_send_after_yes",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Đăng bản tóm tắt tin AI hôm nay lên Telegram giúp mình"},
+        {"role": "user", "content": "Ừ, đăng đi"}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {"name": "send", "args": {"confirmed": true}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: sau khi user đã đồng ý ở turn trước, turn cuối phải gọi send với confirmed=true ngay, không hỏi lại clarify lần nữa."
+      }
+    },
+    {
+      "id": "G09_multiturn_missing_url_still_ask",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Đọc giúp mình bài báo này"},
+        {"role": "user", "content": "Bài mình vừa nói á, đọc kỹ giúp mình"}
+      ],
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {"name": "clarify", "args": {"response_type": "text"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: dù có turn nhắc lại, không turn nào từng đưa URL thật, nên vẫn phải hỏi lại thay vì tự đoán một URL."
+      }
+    },
+    {
+      "id": "G10_multiturn_translation_out_of_scope",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tìm tin tức về AI hôm nay"},
+        {"role": "user", "content": "Thôi khỏi cần tìm nữa"},
+        {"role": "user", "content": "Dịch giúp mình câu 'Hello world' sang tiếng Việt"}
+      ],
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: sau khi hủy yêu cầu tìm tin, câu hỏi dịch thuật ở turn cuối nằm ngoài phạm vi các tool hiện có, agent nên trả lời trực tiếp/từ chối, không gọi tool nào."
+      }
+    }
+  ]
 }

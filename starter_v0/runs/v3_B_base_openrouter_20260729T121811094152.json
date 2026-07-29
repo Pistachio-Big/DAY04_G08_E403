@@ -1,0 +1,1731 @@
+{
+  "run_id": "v3_B_base_openrouter_20260729T121811094152",
+  "version": "v3",
+  "artifact_version": "v3+p571ea0d9b743+t54d48ee9949d",
+  "prompt_hash": "571ea0d9b74361b79ba7fde3e4cb264fcca2db31ead17dc7f7c23da98c7d6a89",
+  "tools_hash": "54d48ee9949de99a23c52a26703c065fe792a693f30240b0188e5c1944d64dd2",
+  "phase": "B",
+  "suite": "base",
+  "provider": "openrouter",
+  "model": "nvidia/nemotron-3-super-120b-a12b:free",
+  "system_prompt": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/artifacts/system_prompt.md",
+  "tools": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/artifacts/tools.yaml",
+  "eval_cases": "data/eval_base.json",
+  "dataset_id": "day04_v2_research_base",
+  "dataset_role": "base",
+  "description": "Core eval cho research agent: routing đúng tool + đúng args, hỏi lại khi thiếu (ask_user), xác nhận trước khi gửi, và xử lý câu ngoài phạm vi / không cần tool. Chấm trên tool_calls + args (subset). KHÔNG sửa file này — chỉ thêm case vào eval_group.json.",
+  "generated_at": "2026-07-29T12:18:11",
+  "summary": {
+    "total_cases": 20,
+    "measured_cases": 20,
+    "provider_error_cases": 0,
+    "passed_cases": 5,
+    "case_accuracy": 0.25,
+    "tool_routing_accuracy": 0.4,
+    "argument_accuracy": 0.25,
+    "multiturn_accuracy": 0.1667,
+    "failure_counts": {
+      "wrong_tool": 5,
+      "wrong_arg_value": 6,
+      "missing_info": 3,
+      "wrong_boundary": 1
+    },
+    "observed_mismatch_counts": {
+      "missing_tool_call": 12,
+      "wrong_arg_value": 3
+    }
+  },
+  "results": [
+    {
+      "id": "R01_user_tweets_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_user_tweets_name_to_handle",
+        "difficulty": "medium",
+        "what_it_tests": "Tin CỦA một người nổi tiếng → map tên Sam Altman thành handle sama rồi gọi get_user_tweets."
+      },
+      "input": "Tweet mới nhất của Sam Altman là gì?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "sama"
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R02_search_tweets_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_search_tweets",
+        "difficulty": "easy",
+        "what_it_tests": "Tweet theo CHỦ ĐỀ → search_tweets, không phải get_user_tweets."
+      },
+      "input": "Mọi người đang bàn gì về GPT-5 trên Twitter?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://api.twitter.com/2/tweets/search/recent?query=GPT-5%20lang:vi%20-is:retweet&max_results=10"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "missing tool call social_search",
+          "extra tool call fetch"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://api.twitter.com/2/tweets/search/recent?query=GPT-5%20lang:vi%20-is:retweet&max_results=10"
+          },
+          "result": {
+            "tool": "read_url",
+            "error": "RuntimeError",
+            "message": "Missing FIRECRAWL_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R03_web_news_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_web_news",
+        "difficulty": "medium",
+        "what_it_tests": "Tin thời sự trên web → web_search topic=news, timeframe=day (hôm nay)."
+      },
+      "input": "Tin tức AI hôm nay có gì nổi bật?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "topic: expected 'news', got None",
+          "timeframe: expected 'day', got None"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI"
+          },
+          "result": {
+            "tool": "web_search",
+            "error": "RuntimeError",
+            "message": "Missing TAVILY_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R04_read_url_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_read_url",
+        "difficulty": "easy",
+        "what_it_tests": "Đã có link cụ thể → read_url, không phải web_search."
+      },
+      "input": "Tóm tắt bài này giúp mình: https://openai.com/blog/gpt-5",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://openai.com/blog/gpt-5"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "https://openai.com/blog/gpt-5"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "missing tool call fetch",
+          "extra tool call paper_text"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "https://openai.com/blog/gpt-5"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "error": "ValueError",
+            "message": "Invalid arXiv ID or URL"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R05_limit_arg",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_limit",
+        "difficulty": "easy",
+        "what_it_tests": "Trích đúng limit=10 từ '10 tweet'."
+      },
+      "input": "Lấy 10 tweet mới nhất của Elon Musk",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 10
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://api.twitter.com/2/users/by/username/elonmusk"
+            }
+          },
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://api.twitter.com/2/users/elonmusk/tweets?max_results=10"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "missing tool call timeline",
+          "extra tool call fetch",
+          "extra tool call fetch"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://api.twitter.com/2/users/by/username/elonmusk"
+          },
+          "result": {
+            "tool": "read_url",
+            "error": "RuntimeError",
+            "message": "Missing FIRECRAWL_API_KEY env var"
+          }
+        },
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://api.twitter.com/2/users/elonmusk/tweets?max_results=10"
+          },
+          "result": {
+            "tool": "read_url",
+            "error": "RuntimeError",
+            "message": "Missing FIRECRAWL_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R06_timeframe_arg",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "'tuần này' → timeframe=week."
+      },
+      "input": "Tin công nghệ trong tuần này",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://vnexpress.net/rss/khoa-hoc-cong-nghe.rss"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "missing tool call lookup",
+          "extra tool call fetch"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://vnexpress.net/rss/khoa-hoc-cong-nghe.rss"
+          },
+          "result": {
+            "tool": "read_url",
+            "error": "RuntimeError",
+            "message": "Missing FIRECRAWL_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R07_search_type_arg",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_search_type",
+        "difficulty": "medium",
+        "what_it_tests": "'phổ biến/top' → search_type=Top (không phải Latest)."
+      },
+      "input": "Cho mình các tweet phổ biến (top) nhất về OpenAI",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "search_type": "Top"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "OpenAI"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "search_type: expected 'Top', got None"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "OpenAI"
+          },
+          "result": {
+            "tool": "search_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R08_out_of_scope",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope",
+        "difficulty": "easy",
+        "what_it_tests": "Câu ngoài phạm vi research → KHÔNG gọi tool, từ chối/định hướng."
+      },
+      "input": "Giải giúp mình bài toán tích phân: nguyên hàm của x^2 là gì?",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Nguyên hàm của \\(x^2\\) là:\n\n\\[\n\\int x^2 \\, dx = \\frac{x^3}{3} + C,\n\\]\n\ntrong đó \\(C\\) là hằng số tích phân.",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R09_no_tool_capability",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "no_tool_meta",
+        "difficulty": "easy",
+        "what_it_tests": "Câu hỏi meta → trả lời thẳng, KHÔNG gọi tool."
+      },
+      "input": "Bạn là gì và làm được những gì?",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Tôi là một trợ lý AI được trang bị một bộ công cụ đa dạng để giúp bạn thực hiện nhiều nhiệm vụ khác nhau. Dưới đây là những gì tôi có thể làm:\n\n**1. Hiểu và trả lời câu hỏi**  \n- Trả lời các câu hỏi về kiến thức chung, khoa học, công nghệ, lịch sử, văn hóa, công nghệ thông tin, v.v.  \n- Giải thích khái niệm, giải thích bài toán, cung cấp giải thích chi tiết hoặc tóm tắt ngắn gọn.\n\n**2. Hỗ trợ viết và chỉnh sửa**  \n- Viết bài luận, bài báo, email, tin nhắn, bài báo cáo, bài thuyết trình.  \n- Sửa lỗi chính tả, ngữ pháp, phong cách; đề xuất cách diễn đạt tốt hơn.  \n- Tóm tắt văn bản dài, tạo bản tóm tắt hoặc bản tóm tắt thực thi.\n\n**3. Hỗ trợ lập trình và kỹ thuật**  \n- Viết, sửa, giải thích mã trong nhiều ngôn ngữ lập trình (Python, JavaScript, Java, C++, …).  \n- Gợi ý giải thuật, giải thích lỗi (debug), đề xuất cải tiến hiệu suất.  \n- Giải thích khái niệm lập trình, cấu trúc dữ liệu, thuật toán, thiết kế hệ thống.\n\n**4. Hỗ trợ học tập và nghiên cứu**  \n- Giải thích bài toán toán học, vật lý, hóa học, sinh học.  \n- Tóm tắt bài báo khoa học, tìm kiếm thông tin từ các nguồn công khai (qua công cụ tra cứu arXiv, Wikipedia, v.v.).  \n- Lập kế hoạch học tập, đề xuất tài liệu tham khảo, giải thích các khái niệm khó.\n\n**5. Hỗ trợ sáng tạo**  \n- Viết truyện ngắn, thơ, lời bài hát, kịch bản.  \n- Đề xuất ý tưởng cho dự án sáng tạo, thiết kế, marketing.  \n- Tạo ra các mô tả sản phẩm, bài quảng cáo, bài viết blog.\n\n**6. Hỗ trợ phân tích và xử lý dữ liệu**  \n- Giải thích kết quả thống kê, giải thích biểu đồ, đề xuất phương pháp phân tích.  \n- Hướng dẫn sử dụng các công cụ như Excel, Python (pandas, matplotlib), SQL.  \n- Giải thích các khái niệm học máy, deep learning cơ bản.\n\n**7. Hỗ trợ ngôn ngữ và dịch thuật**  \n- Dịch văn bản giữa nhiều ngôn ngữ (Anh, Việt, Pháp, Đức, Trung, Nhật, …).  \n- Giải thích thành ngữ, tục ngữ, cung cấp gợi ý cách diễn đạt tự nhiên.\n\n**8. Hỗ trợ cuộc sống hàng ngày**  \n- Đề xuất món ăn, công thức nấu ăn.  \n- Lập kế hoạch du lịch, gợi ý địa điểm tham quan.  \n- Gợi ý sách đọc, phim xem, âm nhạc nghe theo sở thích.\n\n**9. Tích hợp công cụ (tools)**  \nNếu cần thông tin cụ thể, tôi có thể sử dụng các công cụ sau để tra cứu hoặc xử lý:  \n- **Tra cứu Wikipedia** để lấy thông tin tổng quan.  \n- **Tra cứu arXiv** để lấy bài báo khoa học (tải tài liệu, tóm tắt nội dung).  \n- **Tra cứu arXiv paper text** để lấy toàn bộ nội dung bài báo (nếu cần).  \n- **Tìm kiếm trên web** (qua công cụ tìm kiếm tổng hợp) để lấy tin tức, bài viết mới nhất.  \n- **Lấy nội dung trang web** để trích dẫn hoặc tóm tắt.  \n- **Lấy văn bản từ bài báo arXiv** để đọc chi tiết.  \n- **Tìm kiếm paper** trên các cơ sở dữ liệu học thuật.  \n\nNếu bạn có một yêu cầu cụ thể — dù là hỏi đáp, viết bài, giải bài tập, viết mã, tìm kiếm thông tin, hoặc bất kỳ gì khác — hãy cho tôi biết, và tôi sẽ sử dụng các công cụ phù hợp để giúp bạn hoàn thành nhiệm vụ một cách nhanh chóng và chính xác.",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R10_missing_handle",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_handle",
+        "difficulty": "medium",
+        "what_it_tests": "Thiếu handle → ask_user, KHÔNG đoán bừa người nào."
+      },
+      "input": "Tóm tắt 5 tweet mới nhất giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn muốn tóm tắt 5 tweet mới nhất của tài khoản Twitter nào? Vui lòng cung cấp tên tài khoản (hoặc link) để tôi có thể lấy tweets."
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "missing_info",
+        "failures": [
+          "response_type: expected 'text', got None"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn muốn tóm tắt 5 tweet mới nhất của tài khoản Twitter nào? Vui lòng cung cấp tên tài khoản (hoặc link) để tôi có thể lấy tweets."
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn muốn tóm tắt 5 tweet mới nhất của tài khoản Twitter nào? Vui lòng cung cấp tên tài khoản (hoặc link) để tôi có thể lấy tweets.",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "R11_missing_url",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_url",
+        "difficulty": "medium",
+        "what_it_tests": "Nói 'bài này' nhưng không có link → ask_user xin URL."
+      },
+      "input": "Tóm tắt bài viết này hộ mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": ""
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call paper_text"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": ""
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "error": "ValueError",
+            "message": "Invalid arXiv ID or URL"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R12_confirm_before_send",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "confirm_before_write",
+        "difficulty": "medium",
+        "what_it_tests": "Hành động ghi (gửi) → xác nhận trước (ask_user yes_no), không tự gửi."
+      },
+      "input": "Đăng bản tin này lên Telegram giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "send",
+            "args": {
+              "text": "Bạn muốn đăng tin nào lên Telegram? Vui lòng cung cấp nội dung tin tức bạn muốn đăng."
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_boundary",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call send"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "send",
+          "args": {
+            "text": "Bạn muốn đăng tin nào lên Telegram? Vui lòng cung cấp nội dung tin tức bạn muốn đăng."
+          },
+          "result": {
+            "tool": "send_telegram",
+            "status": "needs_confirmation",
+            "message": "Only send after the user explicitly confirms."
+          }
+        }
+      ]
+    },
+    {
+      "id": "R13_parallel_web_and_tweets",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "parallel_tool_calls",
+        "difficulty": "hard",
+        "what_it_tests": "Một request cần hai nguồn → gọi cả web_search và search_tweets; eval không phụ thuộc thứ tự tool call."
+      },
+      "input": "Tìm trên web tin AI hôm nay và tìm thêm tweet về AI.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          },
+          {
+            "name": "social_search",
+            "args": {
+              "query": "AI"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "wiki_summary",
+            "args": {
+              "query": "AI news today"
+            }
+          },
+          {
+            "name": "wiki_summary",
+            "args": {
+              "query": "AI tweet today"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "missing tool call lookup",
+          "missing tool call social_search",
+          "extra tool call wiki_summary",
+          "extra tool call wiki_summary"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "wiki_summary",
+          "args": {
+            "query": "AI news today"
+          },
+          "result": {
+            "tool": "get_wiki_summary",
+            "error": "HTTPError",
+            "message": "404 Client Error: Not Found for url: https://en.wikipedia.org/api/rest_v1/page/summary/AI%20news%20today"
+          }
+        },
+        {
+          "tool": "wiki_summary",
+          "args": {
+            "query": "AI tweet today"
+          },
+          "result": {
+            "tool": "get_wiki_summary",
+            "error": "HTTPError",
+            "message": "404 Client Error: Not Found for url: https://en.wikipedia.org/api/rest_v1/page/summary/AI%20tweet%20today"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R14_out_of_scope_coding",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_coding",
+        "difficulty": "easy",
+        "what_it_tests": "Câu coding ngoài phạm vi research/news → KHÔNG gọi tool."
+      },
+      "input": "Viết giúp mình một hàm Python tính Fibonacci bằng recursion.",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Dưới đây là một hàm Python tính dãy Fibonacci bằng cách đệ quy (recursive).  \nĐể tránh tính lại nhiều lần các giá trị đã tính, tôi cũng thêm một phiên bản có **memoization** (lưu trữ kết quả trung gian) để hàm chạy nhanh hơn với các giá trị lớn.\n\n```python\ndef fibonacci(n: int) -> int:\n    \"\"\"\n    Tính số Fibonacci thứ n bằng đệ quy đơn giản.\n\n    Tham số:\n        n (int): Vị trí trong dãy Fibonacci (bắt đầu từ 0).\n                 F(0) = 0, F(1) = 1, F(n) = F(n-1) + F(n-2) với n >= 2\n\n    Trả về:\n        int: Giá trị F(n)\n\n    Lưu ý:\n        - Hàm này sử dụng đệ quy thuần túy,do đó sẽ chậm khi n lớn\n          (phức tạp thời gian O(2^n)).\n    \"\"\"\n    if n < 0:\n        raise ValueError(\"n phải là số nguyên không âm\")\n    if n == 0:\n        return 0\n    if n == 1:\n        return 1\n    return fibonacci(n - 1) + fibonacci(n - 2)\n\n\ndef fibonacci_memo(n: int, _cache: dict = None) -> int:\n    \"\"\"\n    Tính số Fibonacci thứ n bằng đệ quy có memoization (lưu trữ kết quả trung gian).\n\n    Tham số:\n        n (int): Vị trí trong dãy Fibonacci (>= 0).\n        _cache (dict): Từ điển nội bộ dùng để lưu kết quả đã tính.\n                       Tham số này chỉ dùng nội bộ, không cần truyền khi gọi.\n\n    Trả về:\n        int: Giá trị F(n)\n\n    Lưu ý:\n        - Phiên bản này chạy trong thời gian O(n) vì mỗi giá trị F(i) chỉ được tính một lần.\n        - Tham số _cache được đặt là mutable default argument để giữ trạng thái giữa các lần gọi đệ quy.\n    \"\"\"\n    if n < 0:\n        raise ValueError(\"n phải là số nguyên không âm\")\n    if _cache is None:\n        _cache = {0: 0, 1: 1}   # khởi tạo bộ nhớ đệm với các trường hợp cơ sở\n\n    if n in _cache:\n        return _cache[n]\n\n    # Tính đệ quy và lưu kết quả vào bộ nhớ đệm\n    _cache[n] = fibonacci_memo(n - 1, _cache) + fibonacci_memo(n - 2, _cache)\n    return _cache[n]\n\n\n# ------------------ Ví dụ sử dụng ------------------\nif __name__ == \"__main__\":\n    # In ra 10 số Fibonacci đầu tiên bằng cả hai phiên bản\n    print(\"Fibonacci (đệ quy thuần):\")\n    for i in range(11):\n        print(f\"F({i}) = {fibonacci(i)}\")\n\n    print(\"\\nFibonacci (đệ quy + memoization):\")\n    for i in range(11):\n        print(f\"F({i}) = {fibonacci_memo(i)}\")\n```\n\n### Giải thích ngắn gọn\n- **`fibonacci`** là phiên bản đệ quy thuần túy: mỗi lần gọi gọi lại hai lần gọi nhỏ hơn → độ phức tạp thời gian là O(2ⁿ). Dễ hiểu nhưng chậm với `n` lớn.\n- **`fibonacci_memo`** thêm một từ điển `_cache` để lưu lại kết quả đã tính. Mỗi giá trị `F(i)` chỉ được tính một lần → độ phức tạp giảm xuống O(n) và hoạt động tốt ngay cả với `n` lớn (ví dụ `n = 1000` vẫn chạy nhanh).\n\nBạn có thể sao chép đoạn code trên vào một file `.py` và chạy trực tiếp. Nếu chỉ cần phiên bản đơn giản, hãy dùng hàm `fibonacci`. Nếu muốn hiệu suất tốt hơn, sử dụng `fibonacci_memo`.",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "M01_clarify_then_fill",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_clarify_fill",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: carry limit=5 từ lượt 1 + map tên Elon Musk thành handle elonmusk từ lượt 2."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tóm tắt 5 tweet mới nhất giúp mình"
+        },
+        {
+          "role": "user",
+          "content": "Của Elon Musk nhé"
+        },
+        {
+          "role": "user",
+          "content": "Giữ đúng 5 tweet, đừng đổi số lượng"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 5
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12345"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12346"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12347"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12348"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12349"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12350"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12351"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12352"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12353"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12354"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12355"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12356"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12357"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12358"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12359"
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "2305.12360"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call timeline",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text",
+          "extra tool call paper_text"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12345"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12345",
+            "url": "https://arxiv.org/abs/2305.12345",
+            "pdf_url": "https://arxiv.org/pdf/2305.12345.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12345.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12345.txt",
+            "page_count": 10,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12345",
+                "url": "https://arxiv.org/abs/2305.12345",
+                "source": "arxiv.org",
+                "summary": "Overspinning a rotating black hole in semiclassical gravity with type-A trace anomaly\nJie Jiang 1, * and Ming Zhang 2, †\n1College of Education for the Future, Beijing Normal University, Zhuhai 519087, China\n2Department of Physics, Jiangxi Normal University, Nanchang 330022, China\n(Dated: May 23, 2023)\nRecently, Fernandes discovered an analytic solution for rotating black holes in semiclassical gravity induced\nby the trace anomaly. These solutions exhibit some distinctive characteristics, including a non-spherically sym-\nmetric event horizon and violations of the Kerr bound. As a crucial assumption to uphold causality in spacetime,\nwe investigate the validity of the weak cosmic censorship conjecture (WCCC) within this class of solutions with\ntype-A trace anomaly by introducing a test particle on the equatorial plane. Our study reveals three distinct\nmechanisms that can potentially destroy the event horizon, leading to a violation of the WCCC. Our ﬁndings\nindicate that, with the exception of extremal Kerr, static extremal, and static singular black holes, the WCCC\nmay be violated under the ﬁrst-order perturbation of the test particle. These results suggest the need for further\nexploration of modiﬁcations to the behavior of the test particle under quantum effects in order to address the\nviolation of the WCCC in this system.\nI. INTRODUCTION\nThe Hawking-Penrose singularity theorem states that grav-\nitational collapse inevitably ends up in a spacetime singular-\nity [1, 2]. However, these singularities in gravitational theo-\nries can lead to unpredictable results, making it difﬁcult for\nus to understand the rules of the universe. Penrose suggested\na solution known as the weak cosmic censorship conjecture\n(WCCC) [3], which proposes that these singularities must be\nhidden by an event horizon, maintaining the predictability of\ngravitational theories. Resolving this issue is crucial for un-\nderstanding classical gravitational theory and could offer sig-\nniﬁcant insights into the nature of the universe.\nThe WCCC has been tested in various ways, such as\nthrough numerical simulations with collapsing matter ﬁelds\nand disturbed black holes, and in simulations of merging\nblack holes in higher dimensions [4–19]. In 1974, Wald de-\nsigned a gedanken experiment [20], which demonstrated that\nan extremal Kerr-Newman black hole could resist destruction\nfrom a test particle under the ﬁrst-order approximation from\nthe particle perturbation. Then, Hubeny expanded it to con-\nsider near-extremal black holes and second-order perturba-\ntions, suggesting these black holes could potentially be de-\nstroyed [21]. Many follow-up studies agreed with this ﬁnd-\ning [22–27]. However, as Hubeny [21] discussed, to conﬁrm\nwhether black holes actually disintegrate, all second-order ef-\nfects must be taken into account. In 2017, a more com-\nplex version of the gedanken experiment was proposed by\nSorce and Wald based on the Noether charge method, which\nconsidered the full dynamics of spacetime and perturbation\nmatters [28] and showed that a near-extremal Kerr-Newman\nblack hole cannot be destroyed under second-order perturba-\ntion when the matters satisfy the null energy condition. Ad-\nditionally, ﬁeld scattering is another method used to examine\nthe WCCC across different gravitational systems [29–39]\nThe exploration of quantum phenomena offers us a deeper\n* jiejiang@mail.bnu.edu.cn\n† mingzhang@jxnu.edu.cn (Corresponding author)\nunderstanding of the universal laws of physics. Trace anomaly\nis one such phenomenon that emerges in a fundamentally con-\nformally invariant classical theory due to the breaking of con-\nformal symmetry by one-loop quantum corrections [40, 41].\nThis results in the renormalization of the stress-energy tensor,\nleading to a non-zero trace. Interestingly, this trace is inde-\npendent of the quantum state of the quantum ﬁelds and solely\ndepends on the local curvature of spacetime, marking it as\na general characteristic of quantum theories in gravitational\nﬁelds [42–45].\nIn a four-dimensional spacetime, the trace anomaly can be\nexpressed in terms of the square of the Weyl tensor C and the\nGauss-Bonnet scalar G , which are commonly referred to as\ntype-A and type-B anomalies respectively [46]. This can be\ncaptured by the following equation,\ngµν⟨\nTµν\n⟩\n= β\n2 C2− α\n2 G . (1)\nWhen contemplating modiﬁcations to General Relativity, the\ncontributions of the trace anomaly are critical. They are an-\nticipated to produce observable macroscopic effects [43–45],\nthereby necessitating their inclusion in the low-energy effec-\ntive ﬁeld theory of gravity.\nUtilizing the semi-classical approach allows us to account\nfor the backreaction of quantum ﬁelds and their inﬂuence on\nspacetime geometry. This process transforms the Einstein\nequation into\nRµν− 1\n2 gµν R = 8πG\n⟨\nTµν\n⟩\n. (2)\nA notable challenge when studying the backreaction of quan-\ntum ﬁelds lies in the typically unknown expectation value\nof the renormalized stress-energy tensor even in the static\nand spherically symmetric system [47–49]. To overcome this\nchallenge, Ref. [50] introduces an additional condition: the\ngeometry should rely solely on a single free function, which\neffectively establishes an additional equation of state for the\nstress-energy tensor. Through the adoption of this methodol-\nogy, and focusing solely on the type-A anomaly(β = 0), Ref.\n[50] manages to fully derive the renormalized stress-energy\ntensor and obtain an analytic static and spherically symmetric\narXiv:2305.12345v1  [gr-qc]  21 May 2023\n\n2\ntype-I boundary (Δequator\nmin =0)\ntype-II boundary (Δpoles\nmin =0)\ntype-III boundary (Δequator\nrs =0)\nΔequator\nmin >0\nΔequator\nmin <0\nΔpoles\nmin >0\nΔpoles\nmin <0\nΔequator\nrs <0\nΔequator\nrs >0\n0 2 4 6 8\n0.0\n0.2\n0.4\n0.6\n0.8\n1.0\nα/ M2\na / M\nFIG. 1. The\n(\nα/M2, a/M\n)\ndiagram illustrating the domain of existence for black hole solutions. The shaded region represents the parameter\nspace where black hole solutions exist. The boundary of this region is determined by three distinct boundaries. The type-I boundary (red) is\ndeﬁned by ∆minequator = 0, the type-II boundary (blue) is deﬁned by ∆min\npoles = 0, and the type-III boundary (red) corresponds to the singular black\nhole solutions deﬁned by ∆rs\nequator = 0.\nblack hole solution from the semi-classical Einstein equations.\nIntriguingly, these solutions show a logarithmic correction to\ntheir entropy, aligning with the expectation that primary quan-\ntum corrections to black hole entropy should be logarithmic\n[51, 52]. Most recently, an analytic stationary and axially-\nsymmetric black hole solution to the semiclassical Einstein\nequations induced by the trace anomaly has been found in Ref.\n[53]. Unlike conventional stationary black hole solutions, this\nnew solution presents several distinct features, including the\nviolation of the Kerr bound and an event horizon that lacks\nspherical symmetry, leading to a mismatch between the event\nhorizon and the Killing horizon.\nAs a fundamental assumption for ensuring causality in\nspacetime, a natural question arises as to whether the WCCC\nstill holds when considering quantum effects such as the trace\nanomaly. Therefore, the aim of this paper is to examine the\nWCCC in the rotating stationary solutions obtained in Ref.\n[53]. Speciﬁcally, we will investigate the possibility of de-\nstroying the event horizon by dropping a test particle into the\nblack hole, thereby forming a naked singularity. The structure\nof this paper is as follows. In Sec. II, we will introduce rotat-\ning black hole solutions in semiclassical gravity with type-A\ntrace anomaly and discuss their spacetime structures. In Sec.\nIII, we will ﬁrst present the equations of motion for test par-\nticles on the equatorial plane and derive the condition for test\nparticle to enter the black hole. We will then discuss whether\nthe black hole can be destroyed under the ﬁrst-order approx-\nimation of the perturbation caused by the test particle, thus\nviolating the WCCC. Finally, in Sec. IV, we will prov"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12346"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12346",
+            "url": "https://arxiv.org/abs/2305.12346",
+            "pdf_url": "https://arxiv.org/pdf/2305.12346.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12346.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12346.txt",
+            "page_count": 12,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12346",
+                "url": "https://arxiv.org/abs/2305.12346",
+                "source": "arxiv.org",
+                "summary": "Asymptotic theory of not completely integrable soliton equations\nA. M. Kamchatnov 1\nInstitute of Spectroscopy, Russian Academy of Sciences, Troitsk, Moscow, 108840, Russia a)\n(Dated: 23 May 2023)\nWe develop the theory of transformation of intensive initial nonlinear wave pulses to trains of solitons emerging at\nasymptotically large time of evolution. Our approach is based on the theory of dispersive shock waves in which the\nnumber of nonlinear oscillations in the shock becomes the number of solitons at the asymptotic state. We show that\nthis number of oscillations, which is proportional to the classical action of particles associated with the small-amplitude\nedges of shocks, is preserved by the dispersionless ﬂow. Then the Poincaré-Cartan integral invariant is also constant\nand therefore it reduces to the quantization rule similar to the Bohr-Sommerfeld quantization rule for linear spectral\nproblem associated with completely integrable equations. This rule yields a set of ‘eigenvalues’ which are related with\nthe asymptotic solitons’ velocities and other their characteristics. Our analytical results agree very well with the results\nof numerical solutions of the generalized nonlinear Schrödinger equation.\nPACS numbers: 47.35.Jk, 47.35.Fg, 02.30.Jr\nIn many typical situations an intensive enough initial wave\npulse evolves eventually to some number of solitons, and\ntherefore it is very important to be able to predict veloc-\nities of these asymptotic solitons and other their charac-\nteristics. If the nonlinear wave equation under consid-\neration is completely integrable, then this problem can\nbe solved by ﬁnding the eigenvalues of the linear spec-\ntral problem associated with this equation. The theory\nbecomes especially effective when the number of solitons\nis large, so that the quasiclassical asymptotical method\ncan be applied to the spectral problem. However, in\ncase of not completely integrable equations a similar ap-\nproach was only known for a special class of initial con-\nditions when they correspond to simple waves of the dis-\npersionless approximation. In this paper, we generalize\nthis theory to arbitrary smooth enough initial pulses de-\nscribed by two wave variables. We obtain the generalized\nBohr-Sommerfeld quantization rule which deﬁnes a set of\n‘eigenvalues’ corresponding to given initial conditions and\nshow how these eigenvalues are related with physical pa-\nrameters of asymptotic solitons. The theory agrees very\nwell with numerical simulations and sheds new light on\nthe quasiclassical limit of completely integrable equations.\nI. INTRODUCTION\nIf a nonlinear wave system supports propagation of soli-\ntons, then an intensive enough initial pulse evolves eventually\ninto a certain number N of solitons and some amount of lin-\near radiation. In view of universality of this phenomenon, it\nis very important to be able to predict parameters of emerging\nsolitons (e.g., their velocities and amplitudes) from given ini-\ntial distributions of the wave variables. This problem admits\na straightforward solution in case of completely integrable\nnonlinear wave equations; see, e.g., Refs. 1–3 and references\na)Electronic mail: kamch@isan.troitsk.ru.\ntherein. Such equations are associated with some linear spec-\ntral problems where the wave distributions play the role of\n‘potentials’. Though these ‘potentials’ evolve with time ac-\ncording to the wave equation under consideration, the spec-\ntrum of the associated linear problem does not change, i.e. the\nevolution is isospectral, and each discrete eigenvalue corre-\nsponds to a certain soliton at the asymptotic stage of evolu-\ntion at t→ ∞. Hence, if we ﬁnd the spectrum of the linear\nproblem for given initial wave distributions, then the discrete\neigenvalues provide all necessary information about solitons’\nparameters at asymptotically large time t.\nThis theory considerably simpliﬁes if the ﬁnal number\nof solitons is large, N≫ 1, and the initial distributions\nare smooth enough, so we can apply the quasiclassical\nWKB method to the linear spectral problem. For exam-\nple, in case of Korteweg-de Vries (KdV) equation associ-\nated with the stationary Schrödinger equation 4, the well-\nknown Bohr-Sommerfeld quantization rule readily gives ap-\nproximate values of the discrete eigenvalues very simply re-\nlated with solitons’ velocities and amplitudes5,6. As usual in\nthe WKB method, the asymptotic formulas give quite accu-\nrate results even for small quantum numbers. Similar Bohr-\nSommerfeld quantization rule was derived in Refs. 7,8 for the\nZakharov-Shabat spectral problem associated with nonlinear\nSchrödinger (NLS) equation 9. However, when the nonlin-\near wave equation under consideration is not completely in-\ntegrable, such a direct approach becomes impossible.\nTo ﬁnd a more general method for calculation of parameters\nof asymptotic solitons, we need to consider in some more de-\ntail the process of transformation of an initially smooth pulse\nto a sequence of solitons. One can distinguish in this pro-\ncess three typical stages. At ﬁrst, the pulse’s proﬁle gradu-\nally steepens due to nonlinear effects, but it keeps a smooth\nenough form without any oscillations, so its evolution obeys\nwith high accuracy the dispersionless (hydrodynamic) limit\nof nonlinear wave equations under consideration. When the\nproﬁle’s slope becomes very large, the dispersion effects start\nto inﬂuence on the evolution of the wave, so oscillations\nare generated after the so-called wave breaking moment of\ntime. Such regions of nonlinear oscillations are called dis-\narXiv:2305.12346v1  [nlin.PS]  21 May 2023\n\n2\npersive shock waves (DSWs) and, according to Gurevich and\nPitaevskii10, they can be approximated by modulated peri-\nodic solutions of the nonlinear wave equations. Evolution\nof the modulation parameters obeys the Whitham modulation\nequations11,12. In Gurevich-Pitaevskii approximation, a DSW\noccupies a ﬁnite expanding region of space. At one edge of the\nDSW solitons are gradually formed and the opposite small-\namplitude edge propagates with some group velocity along a\nsmooth part of the evolving pulse. Thus, at the second stage\nof evolution the wave structure consists of one or two DSWs\nadjoined with smooth parts of the pulse and the DSWs ex-\npand gradually over the whole pulse. Numbers of oscillations\nin DSWs increase with time due to difference between phase\nand group velocities of linear waves at the small-amplitude\nedges where oscillations enter into the DSWs regions 13. At\nthe last third stage of evolution of an initially localized pulse\nwith a ﬁnite length its smooth parts disappear and the num-\nber of oscillations in DSWs is stabilized, so the solitons ac-\nquire their asymptotic values of parameters as t→ ∞, when\ndistances between solitons become much greater than their\nwidths. Thus, asymptotic solitons form gradually from small-\namplitude oscillations which enter into the DSW region at its\nsmall-amplitude edge, so we have to consider propagation of\nthis edge in some more detail.\nLet the nonlinear wave dynamics under consideration be\ndescribed by two variables which for deﬁniteness we shall\ncall “density” ρ and “ﬂow velocity” u. The periodic solu-\ntions ρ = ρ(x,t), u = u(x,t) are periodic functions of the phase\nθ which in non-modulated case has the form θ = kx− ωt =\nk(x−V t), where V is the phase velocity of the traveling wave.\nIn a slightly modulated wave, the wave number k and the fre-\nquency ω become slow functions of x and t. Since locally the\nwave can still be considered in the leading approximation as\nuniform, they can be deﬁned as\nk = θx, ω =−θt (1)\nfor some phase θ (x,t), and then one of the modulation equa-\ntions can be written in the form of ‘the number of waves’ con-\nservation law11,12\nkt + ωx = 0, (2)\nwhere k plays the role of density of waves and ω is their ﬂux.\nAt the small-amplitude edge we can distinguish the short\nwavelength oscillation at the length scale ∼ 2π/k and the\nslowly changing “background distributions” ρb(x,t), ub(x,t"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12347"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12347",
+            "url": "https://arxiv.org/abs/2305.12347",
+            "pdf_url": "https://arxiv.org/pdf/2305.12347.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12347.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12347.txt",
+            "page_count": 19,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12347",
+                "url": "https://arxiv.org/abs/2305.12347",
+                "source": "arxiv.org",
+                "summary": "1\nLearning Joint 2D & 3D Diffusion Models for\nComplete Molecule Generation\nHan Huang, Leilei Sun, Bowen Du, Weifeng Lv\nAbstract—Designing new molecules is essential for drug discovery and material science. Recently, deep generative models that aim\nto model molecule distribution have made promising progress in narrowing down the chemical research space and generating\nhigh-fidelity molecules. However, current generative models only focus on modeling either 2D bonding graphs or 3D geometries, which\nare two complementary descriptors for molecules. The lack of ability to jointly model both limits the improvement of generation quality\nand further downstream applications. In this paper, we propose a new joint 2D and 3D diffusion model (JODO) that generates complete\nmolecules with atom types, formal charges, bond information, and 3D coordinates. To capture the correlation between molecular\ngraphs and geometries in the diffusion process, we develop a Diffusion Graph Transformer to parameterize the data prediction model\nthat recovers the original data from noisy data. The Diffusion Graph Transformer interacts node and edge representations based on our\nrelational attention mechanism, while simultaneously propagating and updating scalar features and geometric vectors. Our model can\nalso be extended for inverse molecular design targeting single or multiple quantum properties. In our comprehensive evaluation\npipeline for unconditional joint generation, the results of the experiment show that JODO remarkably outperforms the baselines on the\nQM9 and GEOM-Drugs datasets. Furthermore, our model excels in few-step fast sampling, as well as in inverse molecule design and\nmolecular graph generation. Our code is provided in https://github.com/GRAPH-0/JODO.\nIndex Terms—Molecule Design, Deep Generative Model, Geometric Graph Learning, Graph Transformer.\n✦\n1 I NTRODUCTION\nMachine learning has been increasingly integrated with\nmolecular science and has made a significant impact, as\nexemplified by AlphaFold [1] and de novo drug design\n[2]. Among the various applications of machine learning\nfor the analysis, design, and simulation of molecules [3],\ndiscovering novel molecules with desired properties, is a\nlong-standing challenge that facilitates drug and material\ndesign. To avoid brute-force searching in an astronomical\nnumber of pharmacologically-sensible molecules, deep gen-\nerative models provide a powerful approach to narrowing\ndown the chemical search space [4], [5].\nMolecules can be represented by different descriptors,\nleading to different types of generative models. A typical\nrepresentation is the molecular graph, which describes the\n2D bonding topology of a molecule by using nodes for\natoms and edges for covalent bonds. This representation is\nconvenient for chemical synthesis, molecular dynamics sim-\nulation, etc. Therefore, many graph generative models [6]–\n[10] aim to generate realistic and valid molecular structures.\nHowever, molecules exist in 3D physical space, and their\ngeometries affect their quantum properties, which are hard\nto estimate accurately from 2D graphs. Molecular graph\ngenerative models may produce unstable molecules or re-\nquire additional simulations to find low-energy conformers,\nwhich hinders inverse molecular design and optimization\nfor quantum properties. Moreover, valuable application\n• H. Huang, L. Sun, B. Du and W. Lv are with the State Key Laboratory\nof Software Development Environment, Beihang University, Beijing,\n100191, China.\nE-mail: {h-huang,leileisun,dubowen,lwf}@buaa.edu.cn\n(Corresponding author: Leilei Sun.)\nFig. 1: Molecules can be described by complementary 2D\nbonding graphs and 3D point clouds.\nscenarios, such as structure-based drug design [11], also\ndepend on the 3D geometry of molecules.\nGenerative models that generate atom types and coordi-\nnates have received increasing attention in the community\n[12]–[20], in addition to 2D graph generation. By exploiting\ngeometric symmetries such as translations and rotations in\nEuclidean space (referred to as the SE(3) group), these mod-\nels manage to generate realistic and stable 3D geometries of\nsmall molecules. However, atomic 3D positions alone do not\ncontain the bonding information of molecules, which poses\nsome limitations. On the one hand, bonding information is\nessential for the quality evaluation of molecule generation\nand many downstream applications. The post-processing\nsteps to construct molecular graphs from 3D geometries\n[16], [18] may introduce errors and are suboptimal. On the\narXiv:2305.12347v2  [q-bio.BM]  4 Jun 2023\n\n2\nother hand, directly generating high-quality point clouds of\nlarger drug-like molecules from the GEOM-Drugs dataset\n[21] is challenging, while modeling 2D molecular graphs\ncould provide useful guidance for geometry generation in-\ntuitively. Therefore, we propose that developing generative\nmodels that co-design 2D graphs and 3D geometries is a\npromising direction, which could improve sample quality\nand facilitate further applications. With only a few ex-\nploratory works [22], [23] having attempted joint genera-\ntion, this area remains largely underexplored not only in\nmodel design but also in benchmark pipeline construction.\nIn this paper, we propose a JOint 2D and 3D Diffusion\nmOdel (JODO) for generating complete molecules that in-\nclude atom types, formal charges, bond information, and\n3D coordinates. Diffusion models [24]–[26] have shown flex-\nibility in network architecture and have been successfully\napplied to model the permutation-invariant distribution of\ngraphs [8]–[10], [27], and the SE(3)-invariant distribution\nof 3D geometries [18]. However, constructing diffusion\nmodels to learn the complex joint distribution of complete\nmolecules is still nontrivial, as it requires appropriate diffu-\nsion mechanisms and powerful networks to handle multi-\nmodal noised data in the generative diffusion process.\nFirst, we define our diffusion model as continuous in\nboth time and data space, utilizing a unified noise schedule\nto gradually corrupt the distribution of the molecule compo-\nnents and their correlation. Although some improvements\nhave been made to graph generation by defining diffusion\nmodels in discrete space [10], the preservation of continuity\nenables the potential advantages of fast sampler design,\nguidance methods, uncertainty modeling, etc., which mo-\ntivates [28], [29] to continuousize the discrete input in dif-\nfusion models. Inspired by the self-conditioning technique\nintroduced by [28], we train a data prediction model instead\nof a noise prediction model to recover original data from\ncorrupted data directly, and exploit the model predictions\nfrom the last sampling step as an additional condition to\ncapture accurate graph discreteness and enhance the uti-\nlization of model capacity.\nSecond, we propose parameterizing the data prediction\nmodel with a novel Diffusion Graph Transformer that thor-\noughly interacts node and edge representations via our\nrelational attention mechanism. The geometric coordinates\nalso join the propagation through scalarization and update\nequivariantly along with the scalar features following [30].\nWe can conveniently plug the extra conditional information,\nsuch as noise level or target property label, into our network\nvia adaptive normalization [31], similar to the previous\ndiffusion model design [32], [33].\nMoreover, with the aim of modeling molecule distribu-\ntion and generating chemically valid and geometrically sta-\nble molecules, we evaluate our models from the perspective\nof molecular graphs, 3D geometry, and their alignments in\nunconditional generation. Experimental results show that\nour model outperforms existing baselines in unconditional\njoint generation. The proposed model also leads in per-\nformance on 2D molecular graph generation and inverse\nmolecule design targeted at quantum properties.\nOur main contributions are summarized as follows:\n• We introduce a joint 2D and 3D diffusion-based end-\nto-end generati"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12348"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12348",
+            "url": "https://arxiv.org/abs/2305.12348",
+            "pdf_url": "https://arxiv.org/pdf/2305.12348.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12348.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12348.txt",
+            "page_count": 6,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12348",
+                "url": "https://arxiv.org/abs/2305.12348",
+                "source": "arxiv.org",
+                "summary": "Social Context-aware GCN for Video Character\nSearch via Scene-prior Enhancement\nWenjun Peng1,2, Weidong He 1,2, Derong Xu 1,2, Tong Xu 1,2∗, Chen Zhu 1,3, Enhong Chen 1,2\n1University of Science and Technology of China,\n2State Key Laboratory of Cognitive Intelligence,\n3Alibaba.\n{pengwj,hwd,derongxu}@mail.ustc.edu.cn,{tongxu,cheneh}@ustc.edu.cn,\nzc3930155@gmail.com.\nAbstract—With the increasing demand for intelligent services\nof online video platforms, video character search task has\nattracted wide attention to support downstream applications like\nﬁne-grained retrieval and summarization. However, traditional\nsolutions only focus on visual or coarse-grained social information\nand thus cannot perform well when facing complex scenes,\nsuch as changing camera view or character posture. Along\nthis line, we leverage social information and scene context as\nprior knowledge to solve the problem of character search in\ncomplex scenes. Speciﬁcally, we propose a scene-prior-enhanced\nframework, named SoCoSearch. We ﬁrst integrate multimodal\nclues for scene context to estimate the prior probability of\nsocial relationships, and then capture characters’ co-occurrence\nto generate an enhanced social context graph. Afterwards, we\ndesign a social context-aware GCN framework to achieve feature\npassing between characters to obtain robust representation for\nthe character search task. Extensive experiments have validated\nthe effectiveness of SoCoSearch in various metrics.\nIndex Terms—Person Search, Person Re-identiﬁcation, Multi-\nmodal Learning\nI. INTRODUCTION\nAs an indispensable technology for supporting various video\napplications, video character search plays an important role in\ndownstream tasks such as clip retrieval, video summarization,\netc. For example, many video platforms, such as Tencent and\nYouKu Video, provide an “only look at him” function by\nsearching the clips of speciﬁc characters in videos to meet\nfans’ needs, which enhances user experience and brings sig-\nniﬁcant business beneﬁts. However, the manual collection of\nclips for speciﬁc characters requires a lot of human resources.\nTo this end, automatic character search attaches much\nconcentration from academia and industry. Nevertheless, most\nmainstream video character search methods mainly focus on\nvisual information or coarse-grained social information to\nidentify characters. For example, classic video character search\nmethods, such as [1], [2], only focus on extracting visual clues\nand ignoring other meta information. [3] tries to leverage\nsocial information, but they only use heuristic rules based\non co-occurrence and fail to fully use the scene’s context to\n* Tong Xu is the corresponding author.\nThis work was supported by the grants from National Natural Science\nFoundation of China (No.U22B2059, 62222213, 62072423), the USTC Re-\nsearch Funds of the Double First-Class Initiative (No.YD2150002009), and\nthe Alibaba Group through Alibaba Innovative Research (AIR) Program.\nSubtitles and Screen-bullet Comments\ncoupleworking\n➢ I still have here. That's true\n➢ Something that might wake you up from your dreams\n➢ Not in my head, but here\n➢ Kneel down and hope to have such a partner\n➢ Both men and women are so charming, [emoji]\n➢ Does such a wife really exist?\nworking working\nSocial Relation Graph\nPerson 1 Person 2\nFig. 1. A ﬁlm scene and its social relation graph.\nextract the prior probability of relationships, thus limiting their\neffectiveness. Considering that, with the plot processing, the\ncharacters may develop many social relationships. Estimating\nthe impact of these relationships on co-occurrence behavior\nwithout discrimination will seriously weaken the differentia-\ntion of relationships. Let us take Figure 1 as an example. There\nare two characters in this ﬁlm scene, where the female is easy\nto identify because of her clear visual clues. But as for the\nmale one, on the one hand, his back cannot provide enough\nvisual clues to recognize him. On the other hand, the numerous\nrelationships of the female also make it difﬁcult to reveal its\nco-occurrence character. However, with carefully checking the\nﬁne-grained information, such as the subtitles and the kinds\nof social relationships between characters, we can reasonably\ninfer the identity of this male. Obviously, the subtitles and\nvisual clues of the background imply two characters are a\n“couple”. And the most likely person, dating with the female,\nis her husband.\nBased on the above observations, in this paper, we propose\na scene prior knowledge based Social Context-aware character\nSearch framework named SoCoSearch, which can integrate\nﬁne-grained social information and scene context to search\nvideo characters effectively. Speciﬁcally, SoCoSearch ﬁrst\ngenerates a prior probability for different relationship types to\nobtain a weighted social graph through integrated multimodal\nsemantic clues. At the same time, we use the characters’\nvisual features to select an anchor node and mine characters’\nco-occurrence. The co-occurrence serves as an extra clue to\narXiv:2305.12348v1  [cs.MM]  21 May 2023\n\nenhance the weighted social graph into a social context graph,\nwhich helps to learn the candidate set of potential matching\ncharacters. Furthermore, we employ a social context-aware\nGCN to achieve feature passing between graph nodes and\nobtain characters’ social features. Finally, we use anchor node\nsimilarity to adjust the weight of visual and social features\nadaptively. The technical contributions of this article can be\nsummarized as follows:\n• We further discussed the assistance of social relationships\non the video character search task, and took the lead in\nusing the scene context as prior knowledge to enhance\nthe model’s performance on the task.\n• We proposed a novel neural-based framework, which\neffectively integrates multiple clues and automatically\nadjusts the weight of various features.\n• The experiments on real video datasets prove that our\nmethod outperforms several state-of-the-art baselines in\nterms of mAP, mINP and R1.\nII. RELATED WORKS\nA. Person Search.\nThe main challenge of traditional methods is extracting\nrobust and discriminative visual features. [1], [4], [5] extract\nmultiple level features from earlier layers, and fuse them\nas the ﬁnal representation to enhance the performance of\nmodels. To guarantee that the model has better generalization\nability across domains, [6] introduces normalization modules\nby learning domain styles to improve the model’s performance\nacross different cameras. [7] designs two novel modules named\njigsaw patch module and side information embeddings, which\ncan improve the robustness and discrimination ability of the\nmodel by rearranging patches and adding domain information.\nNevertheless, traditional datasets are often gathered from a\nfew nearby cameras in a short time, leading to the appearance\nof the same identity often similar, with slight variance in\nposture, clothing or occlusion. To solve the problem, [8]\nutilizes social context to make models adaptable to the video\ncharacter search task in unconstrained environments. [3] takes\na step further and uses high-level social relations to identify\ncharacters. Unfortunately, this method relies on heuristic mod-\neling and fails to reveal the prior probability of the relationship\nin different scenes, thus limiting the guidance capability of\ncharacters’ occurrence.\nB. Multimodal Learning.\nRecently, some studies have applied multimodal learning\ntechniques to video applications. [9] proposes a novel frame-\nwork for character-oriented video summarization by combin-\ning visual and textual information for the ﬁrst time. [10]\nintroduces a multi-stream architecture to recognize relations\nin videos. [11] proposes a model that considers visual and\ndialogue clues to recognize interactions and social relations\njointly. Inspired by the above studies, we design a dynamic\nrelation weight module to predict the prior probability of\nrelationships in different scenes via multimodal clues.\nIII. TECHNICAL FR"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12349"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12349",
+            "url": "https://arxiv.org/abs/2305.12349",
+            "pdf_url": "https://arxiv.org/pdf/2305.12349.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12349.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12349.txt",
+            "page_count": 15,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12349",
+                "url": "https://arxiv.org/abs/2305.12349",
+                "source": "arxiv.org",
+                "summary": "PINA: Leveraging Side Information in eXtreme Multi-label Classiﬁcation via\nPredicted Instance Neighborhood Aggregation\nEli Chien 1 * Jiong Zhang 2 Cho-Jui Hsieh 3 Jyun-Yu Jiang2 Wei-Cheng Chang 2 Olgica Milenkovic 1\nHsiang-Fu Yu2\nAbstract\nThe eXtreme Multi-label Classiﬁcation (XMC)\nproblem seeks to ﬁnd relevant labels from an\nexceptionally large label space. Most of the\nexisting XMC learners focus on the extraction\nof semantic features from input query text.\nHowever, conventional XMC studies usually\nneglect the side information of instances and\nlabels, which can be of use in many real-world\napplications such as recommendation systems\nand e-commerce product search. We propose\nPredicted Instance Neighborhood Aggregation\n(PINA), a data enhancement method for the\ngeneral XMC problem that leverages beneﬁcial\nside information. Unlike most existing XMC\nframeworks that treat labels and input instances\nas featureless indicators and independent\nentries, PINA extracts information from the\nlabel metadata and the correlations among\ntraining instances. Extensive experimental\nresults demonstrate the consistent gain of\nPINA on various XMC tasks compared to the\nstate-of-the-art methods: PINA offers a gain in\naccuracy compared to standard XR-Transformers\non ﬁve public benchmark datasets. Moreover,\nPINA achieves a ∼ 5% gain in accuracy on\nthe largest dataset LF-AmazonTitles-1.3M.\nOur implementation is publicly available\nhttps://github.com/amzn/pecos/\ntree/mainline/examples/pina.\n∗This work was done during Eli Chien’s internship at Ama-\nzon, USA. 1Department of ECE, University of Illinois Urbana-\nChampaign, USA 2Amazon, USA 3Department of CS, University\nof California, Los Angeles, USA. Correspondence to: Eli Chien\n<ichien3@illinois.edu>.\nProceedings of the 40 th International Conference on Machine\nLearning, Honolulu, Hawaii, USA. PMLR 202, 2023. Copyright\n2023 by the author(s).\nSearch, Buy, …\nHarry Potter and \nthe Sorcerer's Stone\nPercy Jackson UnwantedsPennyroyal Academy\nAlso Search\nFrequently\nBought Together\n(2) Collective Behaviors as Instance Correlation Signals\nHarry Potter and the\n Chamber of Secrets\nHarry Potter and the\nPrisoner of Azkaban\nHarry Potter and\nthe Goblet of Fire\nInput Product\n Instance \n<latexit sha1_base64=\"J6DkZ0d1SbjWWP2FOp8zhaloSCg=\">AAAB6HicbVBNS8NAEJ3Ur1q/qh69LBbBU0mkqMeCF48t2FZoQ9lsJ+3azSbsbsQS+gu8eFDEqz/Jm//GbZuDtj4YeLw3w8y8IBFcG9f9dgpr6xubW8Xt0s7u3v5B+fCoreNUMWyxWMTqPqAaBZfYMtwIvE8U0igQ2AnGNzO/84hK81jemUmCfkSHkoecUWOl5lO/XHGr7hxklXg5qUCORr/81RvELI1QGiao1l3PTYyfUWU4Ezgt9VKNCWVjOsSupZJGqP1sfuiUnFllQMJY2ZKGzNXfExmNtJ5Ege2MqBnpZW8m/ud1UxNe+xmXSWpQssWiMBXExGT2NRlwhcyIiSWUKW5vJWxEFWXGZlOyIXjLL6+S9kXVu6zWmrVK3c3jKMIJnMI5eHAFdbiFBrSAAcIzvMKb8+C8OO/Ox6K14OQzx/AHzucP472M8w==</latexit>\nx\n<latexit sha1_base64=\"J6DkZ0d1SbjWWP2FOp8zhaloSCg=\">AAAB6HicbVBNS8NAEJ3Ur1q/qh69LBbBU0mkqMeCF48t2FZoQ9lsJ+3azSbsbsQS+gu8eFDEqz/Jm//GbZuDtj4YeLw3w8y8IBFcG9f9dgpr6xubW8Xt0s7u3v5B+fCoreNUMWyxWMTqPqAaBZfYMtwIvE8U0igQ2AnGNzO/84hK81jemUmCfkSHkoecUWOl5lO/XHGr7hxklXg5qUCORr/81RvELI1QGiao1l3PTYyfUWU4Ezgt9VKNCWVjOsSupZJGqP1sfuiUnFllQMJY2ZKGzNXfExmNtJ5Ege2MqBnpZW8m/ud1UxNe+xmXSWpQssWiMBXExGT2NRlwhcyIiSWUKW5vJWxEFWXGZlOyIXjLL6+S9kXVu6zWmrVK3c3jKMIJnMI5eHAFdbiFBrSAAcIzvMKb8+C8OO/Ox6K14OQzx/AHzucP472M8w==</latexit>\nx XMC\nModel \n<latexit sha1_base64=\"AeM4kJdhI7TR8ajxpOOVHep/fI0=\">AAAB8nicbVDLSsNAFL2pr1pfVZduBovgqiQi6rIgiMsK9gFtKJPppB06mYSZG6GEfoYbF4q49Wvc+TdO2iy09cDA4Zx7mXNPkEhh0HW/ndLa+sbmVnm7srO7t39QPTxqmzjVjLdYLGPdDajhUijeQoGSdxPNaRRI3gkmt7nfeeLaiFg94jThfkRHSoSCUbRSrx9RHDMqs7vZoFpz6+4cZJV4BalBgeag+tUfxiyNuEImqTE9z03Qz6hGwSSfVfqp4QllEzriPUsVjbjxs3nkGTmzypCEsbZPIZmrvzcyGhkzjQI7mUc0y14u/uf1Ugxv/EyoJEWu2OKjMJUEY5LfT4ZCc4ZyagllWtishI2ppgxtSxVbgrd88ippX9S9q/rlw2Wt4RZ1lOEETuEcPLiGBtxDE1rAIIZneIU3B50X5935WIyWnGLnGP7A+fwBdWuRUw==</latexit>\nF\n<latexit sha1_base64=\"AeM4kJdhI7TR8ajxpOOVHep/fI0=\">AAAB8nicbVDLSsNAFL2pr1pfVZduBovgqiQi6rIgiMsK9gFtKJPppB06mYSZG6GEfoYbF4q49Wvc+TdO2iy09cDA4Zx7mXNPkEhh0HW/ndLa+sbmVnm7srO7t39QPTxqmzjVjLdYLGPdDajhUijeQoGSdxPNaRRI3gkmt7nfeeLaiFg94jThfkRHSoSCUbRSrx9RHDMqs7vZoFpz6+4cZJV4BalBgeag+tUfxiyNuEImqTE9z03Qz6hGwSSfVfqp4QllEzriPUsVjbjxs3nkGTmzypCEsbZPIZmrvzcyGhkzjQI7mUc0y14u/uf1Ugxv/EyoJEWu2OKjMJUEY5LfT4ZCc4ZyagllWtishI2ppgxtSxVbgrd88ippX9S9q/rlw2Wt4RZ1lOEETuEcPLiGBtxDE1rAIIZneIU3B50X5935WIyWnGLnGP7A+fwBdWuRUw==</latexit>\nF \nMulti-label\nRelevant Keywords\n<latexit sha1_base64=\"X99YK/AsJmOeibxp3d/eSb8QLVs=\">AAACBnicbVDLSgMxFM3UV62vqks3wSK4KjNS1GXBjcsK9gFtKZlMpo3NJENyR6hD9y7d6ke4E7f+ht/gT5hpZ2FbDwQO59zLPTl+LLgB1/12CmvrG5tbxe3Szu7e/kH58KhlVKIpa1IllO74xDDBJWsCB8E6sWYk8gVr++ObzG8/Mm24kvcwiVk/IkPJQ04JWKnVo4ECMyhX3Ko7A14lXk4qKEdjUP7pBYomEZNABTGm67kx9FOigVPBpqVeYlhM6JgMWddSSSJm+uks7RSfWSXAodL2ScAz9e9GSiJjJpFvJyMCI7PsZeJ/XjeB8LqfchknwCSdHwoTgUHh7Os44JpREBNLCNXcZsV0RDShYAtauAJ8/JRFUMJMS7Ydb7mLVdK6qHqX1dpdrVJ3856K6ASdonPkoStUR7eogZqIogf0gl7Rm/PsvDsfzud8tODkO8doAc7XL8H+mf4=</latexit>\n···\n<latexit sha1_base64=\"CrJqydNVUIcIqU4RLJwPRlQ/zDM=\">AAACIHicbVDLSgMxFM34rPVVdSlIsAgVpMxIUTdCQRCXFewD2qFk0kwbmnmQ3JHWYVz5JS7d6ke4E5f6C/6EmbYL23ogcDjnXu7JcULBFZjml7GwuLS8sppZy65vbG5t53Z2ayqIJGVVGohANhyimOA+qwIHwRqhZMRzBKs7/avUr98zqXjg38EwZLZHuj53OSWgpXbuoOUR6FEi4uukMDjBLWADiB81kuNLK9vO5c2iOQKeJ9aE5NEElXbup9UJaOQxH6ggSjUtMwQ7JhI4FSzJtiLFQkL7pMuamvrEY8qOR/9I8JFWOtgNpH4+4JH6dyMmnlJDz9GTaWo166Xif14zAvfCjrkfRsB8Oj7kRgJDgNNScIdLRkEMNSFUcp0V0x6RhIKubuoK8P5DGiEQKknbsWa7mCe106J1VizdlvJlc9JTBu2jQ1RAFjpHZXSDKqiKKHpCL+gVvRnPxrvxYXyORxeMyc4emoLx/Qs7EKO4</latexit>\nF(x, )=1\n<latexit sha1_base64=\"eCcK0eenV02cUhMyhClWAyXygNw=\">AAACIHicbVDLSgMxFM34rPVVdSlIsAgVpMxIUTdCQRCXFewD2qFk0kwbmnmQ3JHWYVz5JS7d6ke4E5f6C/6EmbYL23ogcDjnXu7JcULBFZjml7GwuLS8sppZy65vbG5t53Z2ayqIJGVVGohANhyimOA+qwIHwRqhZMRzBKs7/avUr98zqXjg38EwZLZHuj53OSWgpXbuoOUR6FEi4uukMDjBLWADiB81kuNLM9vO5c2iOQKeJ9aE5NEElXbup9UJaOQxH6ggSjUtMwQ7JhI4FSzJtiLFQkL7pMuamvrEY8qOR/9I8JFWOtgNpH4+4JH6dyMmnlJDz9GTaWo166Xif14zAvfCjrkfRsB8Oj7kRgJDgNNScIdLRkEMNSFUcp0V0x6RhIKubuoK8P5DGiEQKknbsWa7mCe106J1VizdlvJlc9JTBu2jQ1RAFjpHZXSDKqiKKHpCL+gVvRnPxrvxYXyORxeMyc4emoLx/Qs5cqO3</latexit>\nF(x, )=0\n<latexit sha1_base64=\"eCcK0eenV02cUhMyhClWAyXygNw=\">AAACIHicbVDLSgMxFM34rPVVdSlIsAgVpMxIUTdCQRCXFewD2qFk0kwbmnmQ3JHWYVz5JS7d6ke4E5f6C/6EmbYL23ogcDjnXu7JcULBFZjml7GwuLS8sppZy65vbG5t53Z2ayqIJGVVGohANhyimOA+qwIHwRqhZMRzBKs7/avUr98zqXjg38EwZLZHuj53OSWgpXbuoOUR6FEi4uukMDjBLWADiB81kuNLM9vO5c2iOQKeJ9aE5NEElXbup9UJaOQxH6ggSjUtMwQ7JhI4FSzJtiLFQkL7pMuamvrEY8qOR/9I8JFWOtgNpH4+4JH6dyMmnlJDz9GTaWo166Xif14zAvfCjrkfRsB8Oj7kRgJDgNNScIdLRkEMNSFUcp0V0x6RhIKubuoK8P5DGiEQKknbsWa7mCe106J1VizdlvJlc9JTBu2jQ1RAFjpHZXSDKqiKKHpCL+gVvRnPxrvxYXyORxeMyc4emoLx/Qs5cqO3</latexit>\nF(x, )=0\n<latexit sha1_base64=\"CrJqydNVUIcIqU4RLJwPRlQ/zDM=\">AAACIHicbVDLSgMxFM34rPVVdSlIsAgVpMxIUTdCQRCXFewD2qFk0kwbmnmQ3JHWYVz5JS7d6ke4E5f6C/6EmbYL23ogcDjnXu7JcULBFZjml7GwuLS8sppZy65vbG5t53Z2ayqIJGVVGohANhyimOA+qwIHwRqhZMRzBKs7/avUr98zqXjg38EwZLZHuj53OSWgpXbuoOUR6FEi4uukMDjBLWADiB81kuNLK9vO5c2iOQKeJ9aE5NEElXbup9UJaOQxH6ggSjUtMwQ7JhI4FSzJtiLFQkL7pMuamvrEY8qOR/9I8JFWOtgNpH4+4JH6dyMmnlJDz9GTaWo166Xif14zAvfCjrkfRsB8Oj7kRgJDgNNScIdLRkEMNSFUcp0V0x6RhIKubuoK8P5DGiEQKknbsWa7mCe106J1VizdlvJlc9JTBu2jQ1RAFjpHZXSDKqiKKHpCL+gVvRnPxrvxYXyORxeMyc4emoLx/Qs7EKO4</latexit>\nF(x, )=1\nProduct Keyword Recommendation as an XMC task\n(1) Keyword Description as Label Metadata\nE-commerce\nCustomers\n!\n \"\n#\n$\n“Dan Brown” “J. K.\nRowling”\n“Reference\nBooks”\n“Harry\nPotter”\n<latexit sha1_base64=\"X99YK/AsJmOeibxp3d/eSb8QLVs=\">AAACBnicbVDLSgMxFM3UV62vqks3wSK4KjNS1GXBjcsK9gFtKZlMpo3NJENyR6hD9y7d6ke4E7f+ht/gT5hpZ2FbDwQO59zLPTl+LLgB1/12CmvrG5tbxe3Szu7e/kH58KhlVKIpa1IllO74xDDBJWsCB8E6sWYk8gVr++ObzG8/Mm24kvcwiVk/IkPJQ04JWKnVo4ECMyhX3Ko7A14lXk4qKEdjUP7pBYomEZNABTGm67kx9FOigVPBpqVeYlhM6JgMWddSSSJm+uks7RSfWSXAodL2ScAz9e9GSiJjJpFvJyMCI7PsZeJ/XjeB8LqfchknwCSdHwoTgUHh7Os44JpREBNLCNXcZsV0RDShYAtauAJ8/JRFUMJMS7Ydb7mLVdK6qHqX1dpdrVJ3856K6ASdonPkoStUR7eogZqIogf0gl7Rm/PsvDsfzud8tODkO8doAc7XL8H+mf4=</latexit>\n···\nFigure 1. Illustration of two types of side information, including\n(1) label metadata and (2) instance correlation signals, based on an\nexample XMC task that recommends relevant keywo"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12350"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12350",
+            "url": "https://arxiv.org/abs/2305.12350",
+            "pdf_url": "https://arxiv.org/pdf/2305.12350.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12350.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12350.txt",
+            "page_count": 21,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12350",
+                "url": "https://arxiv.org/abs/2305.12350",
+                "source": "arxiv.org",
+                "summary": "Head-to-Head and Tail-to-Tail Domain Wall in Hafnium Zirconium Oxide: A First \nPrinciples Analysis of Domain Wall Formation and Energetics \n \nTanmoy K. Paul, Atanu K. Saha, Sumeet K. Gupta   \nPurdue University, West Lafayette, Indiana, 47907, USA \nEmail: paul115@purdue.edu  / Phone: (765) 607-3147  \n \nKeywords: ferroelectric, charged domain wall, polarization, depolarization field \n180° domains walls ( DWs) of Head-to-Head/Tail-to-Tail (H-H/T-T) type in ferroelectric (FE) materials are of \nimmense interest for a comprehensive understanding of the FE attributes  as well as  harnessing them for new \napplications. Our first principles calculation suggests that such DW formation in Hafnium Zirconium Oxide \n(HZO) based FEs depends on the unique attributes of the HZO unit cell, such as polar-spacer segmentation. Cross \npattern of the polar and spacer segments in two neighboring domains along the polarization direction (where polar \nsegment of one domain aligns with the spacer segment of another) boosts the stability of such DWs. We further \nshow that low density of oxygen vacancies at the metal-HZO interface and high work function of metal electrodes \nare conducive for T-T DW formation. On the other hand, high density of oxygen vacancy and low work function \nof metal electrode  favor H-H DW formation. Polarization bound charges at the DW get screened when band \nbending from depolarization field accumulates holes (electrons) in T -T (H -H) DW . For a comprehensive \nunderstanding, we also investigate their FE nature and domain growth mechanism . Our analysis suggests that a \nminimum thickness criterion of domains has to be satisfied for the stability of H-H/T-T DW and switching of the \ndomains through such DW formation.\n \n1. Introduction \nCharacteristics of domains and their kinetics are \ncrucial for understanding the novel applications of \nFerroelectric (FE) material-based devices . The \ndomains in an FE  are characterized by a specific \ndirection of electric polarization. In t he boundary \nregion between two neighboring domains , defined as \nthe d omain wall (DW) , polarization transitions from \none direction to the other. The nature of the DW and \nthe polarization direction in the domains depend on \nelectrostatic, mechanical and thermodynamic energies \nand the  coupling amongst them . The DWs are \ncommonly indicated by the angle between the \npolarization of the neighboring domains.  Theoretical \nand experimental works have established a wide \nvariety of DWs in FE materials. For example, with \ndensity functional theory calculations and transmission \nelectron microscopy (TEM) experiments, 109°, neutral \n180° and 71 ° DWs in FE BiFeO 3 have been \ndemonstrated [1]. 90° DW in tetragonal ferroelectric \nPbTiO3 has been studied through the combination of \nfirst-principles calculations  and Landau-Ginzburg-\nDevonshire (LGD) theory  and validated by  \nexperiments [2]. 180° charged DW has been \nexperimentally demonstrated in BaTiO 3 single crystal \nthrough mixed electron/ion screening mechanism [3].  \nDWs in FEs can be broadly classified into two types: \n(1) 180° ferroelectric DWs where polarization vectors \nin two surrounding domains are antiparallel and (2) \nferroelastic DWs where polarization vectors are at an \nangle other than 180 °. The 180 ° FE DWs can be \nsubcategorized into two types. First is the most widely \nstudied 180° neutral DW where DW is parallel to the \npolarization direction.  The second is known as  180° \nHead-to-Head/Tail-to-Tail (H-H/T-T) DW where DW \nis in a plane perpendicular to the polarization direction, \nand polarization vectors of the two domains either face \neach other (H-H) or away from each other (T-T). DWs \ncan also be classified according to the orientation of \npolarization within the DW viz. Ising, Neel or Bloch \ntype [4]. Ising type DW is the most common DW in \nFEs where polarization axis is fixed  inside the DW . \nNeel and Bloch type DWs have also been reported in \nPb(Zr,Ti)O3 and LiTa O3 FEs, where rotation of \npolarization direction happens inside the DW [5] [6].  \nIn 180° H-H/T-T and ferroelastic DW, free carriers \nmay appear at the DW to compensate bound \npolarization charges. These are known as the charged \nDWs which ha ve received the attention of scientific \ncommunity for their prospective applications due to \ntheir giant conductivity. This contrasts with the neutral \nDWs where the conductivity is extremely low. Several \ntheories [7] [8] and experiments [9] [10] have been \npublished on the principle and applications of charged \nDWs. For example, t hrough electric field -controlled \ntransformation between neutral and charged DW in \nBiFeO3, ON-OFF switching has been shown \n\nexperimentally and its application in logic circuits have \nbeen proposed [11].   \nAll the examples  of different types of DW s \nmentioned so far are those of conventional  perovskite \nbased FEs. Compared to them, d oped/undoped \nHafnium Oxide (HfO2) is a  more recent  class of  FE \nmaterial and is widely studied  due to its scalability \n(excellent ferroelectricity in ultra -thin films) and  \ncompatibility with  complementary metal oxide \nsemiconductor (CMOS)  process [12] [13]. Among \nHfO2 based FEs, 50% Zr-doped HfO2 (Hf0.5Zr0.5O2 or \nHZO) has been shown to exhibit maximum percentage \nof FE phase which leads to  the highest remnant \npolarization [14]. Among different types of DW in \nHfO2-based materials, 180 ° neutral DW [15] [16] has \nbeen by far the most explored  type of DW. Besides, \nnon-180° ferroelastic DWs have also been theoretically \n[17] analyzed and experimentally [18] [19] [20] \nvalidated in HZO. On the other hand , stable 180° H-\nH/T-T DW has been predicted from physical modeling \nin HZO based devices [21] [22]. For example, previous \nphase field model for HZO based FE field effect \ntransistor (FEFET) from our research group shows that \nfor a thickness regime greater than 5nm of FE up to 10 \nnm, stable H-H/T-T DWs can form at suitable voltages \nduring polarization switching via domain nucleation \nand DW motion [21]. This, in turn, impact s the multi-\nlevel memory/synaptic functionality in FEFETs [21].  \nDespite predicting  180° H-H/T-T DW formation, \nphase field models do not offer the understanding of \nmicroscopic formation, energetics, or domain \ndynamics of this type of domain wall in HZO. For \nexample, a n important aspect of H -H/T-T DW \nformation is polarization bound charge screening  \nmechanism. Previous theoretical studies have shown \nthat charge compensation of bound charges by free \ncarrier is necessary to form st able H -H/T-T domain \nwall in FE  [7]. But t ill now, there has been no \nfundamental investigation from the first principles  \nanalysis or experimental demonstration of 180° H-H/T-\nT DW in HZO.  \nIn this work, we make the following contributions:  \n➢ We explore the possibilities of 180 ° H-H/T-T DW \nformation in HZO -based Metal -FE-Metal (MFM) \nstructures using first principles Density Functional \nTheory (DFT) calculations.  \n➢ We show that e nergy minimization  in H -H/T-T \nDWs occurs through c ross-pattern configuration of  \npolar and spacer segments in two neighboring domains \nof HZO.   \n➢ We expound the b ound polarization charge \ncompensation mechanisms at the interface and DW.  \n➢ We establish the effect of oxygen vacancy and work \nfunction of metal electrode on the stability of H-H/T-T \nDWs. \n➢ We analyze the t hickness constraints of H-H/T-T \nDW formation, their FE polarization profiles  and \ndomain growth mechanisms.     \n2. Results & Discussion \nWe will first discuss the domain configurations,  \nwhich play an important role in the energetics of the H-\nH/T-T domain walls. It is widely known that \northorhombic Pca21 phase (as shown in Figure 1) is the \nsource of ferroelectricity in HfxZr1-xO2 [23]. The unit \n \nFigure 1 Orthorhombic Pca21 phase of Hf0.5Zr0.5O2 \nwith z-axis as the polarization direction (Gray and red \ncolored atoms represent Hf/Zr and O respectively). \nFor an upward polarized unit cell (U), 4 dow"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12351"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12351",
+            "url": "https://arxiv.org/abs/2305.12351",
+            "pdf_url": "https://arxiv.org/pdf/2305.12351.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12351.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12351.txt",
+            "page_count": 14,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12351",
+                "url": "https://arxiv.org/abs/2305.12351",
+                "source": "arxiv.org",
+                "summary": "“Are Your Explanations Reliable?” Investigating the Stability of LIME in\nExplaining Text Classifiers by Marrying XAI and Adversarial Attack\nChristopher Burger\nUniversity of Mississippi\nOxford, MS, USA\ncburger@olemiss.edu\nLingwei Chen\nWright State University\nDayton, OH, USA\nlingwei.chen@wright.edu\nThai Le\nUniversity of Mississippi\nOxford, MS, USA\nthaile@olemiss.edu\nAbstract\nLIME has emerged as one of the most com-\nmonly referenced tools in explainable AI (XAI)\nframeworks that is integrated into critical ma-\nchine learning applications–e.g., healthcare and\nfinance. However, its stability remains little ex-\nplored, especially in the context of text data,\ndue to the unique text-space constraints. To\naddress these challenges, in this paper, we first\nevaluate the inherent instability of LIME on\ntext data to establish a baseline, and then pro-\npose a novel algorithm XAIF OOLER to per-\nturb text inputs and manipulate explanations\nthat casts investigation on the stability of LIME\nas a text perturbation optimization problem.\nXAIF OOLER conforms to the constraints to\npreserve text semantics and original prediction\nwith small perturbations, and introduces Rank-\nbiased Overlap (RBO) as a key part to guide\nthe optimization of XAIF OOLER that satisfies\nall the requirements for explanation similarity\nmeasure. Extensive experiments on real-world\ntext datasets demonstrate thatXAIF OOLER sig-\nnificantly outperforms all baselines by large\nmargins in its ability to manipulate LIME’s ex-\nplanations with high semantic preservability.\n1 Introduction\nMachine learning has witnessed extensive research,\nleading to its enhanced capability in predicting\na wide variety of phenomena (Pouyanfar et al.,\n2018). Unfortunately, this increased effectiveness\nhas come at the cost of comprehending the inner\nworkings of the resulting models. To address this\nchallenge, explainable AI (XAI), also known as in-\nterpretable AI (Tjoa and Guan, 2020), has emerged\nas a discipline focused on understanding why a\nmodel makes the predictions it does. XAI contin-\nues to grow in importance due to both legal and\nsocietal demands for elucidating the factors con-\ntributing to specific model predictions.\nWhile explainability in AI as a general concept\nhas yet to fully coalesce to an accepted set of defini-\n(2) winter\n(3) joint\n(6) worse\n(13) rash\n(2) rash\n(3) worse\n(5) winter\n(11) joint\n1.0 0.0 1.00.0\n(1) skin(1) skin\n... ...\n“I have a skin rash that gets becomes worse in the winter. I\nhave to moisturize more regularly consistently and have [...].\nI also have joint pain. ”\nFigure 1: With only two perturbations, XAIF OOLER\nsignificantly demoted “joint pain” symptom from top-3\nto 11th-rank (left→right figure) while maintaining the\noriginal prediction labelof “peptic ulcers” andretaining\nthe clarity and meaning of the original text.\ntions (Ghorbani et al., 2019), the concept of Stabil-\nity starts to occur throughout the discussions and re-\nmains prominent (Molnar, 2022; Doshi-Velez and\nKim, 2017; Zhang et al., 2020). A stable explana-\ntion refers to one where small changes to the input\nshould have a corresponding small effect on the\noutput. In other words, similar inputs to a model\nshould produce similar explanations. Lack of stabil-\nity in an explanatory method undermines its trust-\nworthiness (Ghorbani et al., 2019), and renders all\nsubsequent explanations suspect. This lack of trust-\nworthiness is one reason why the adoption of AI\nin disciplines like healthcare has progressed slower\nthan in other disciplines (Markus et al., 2021).\nPrevious work on XAI stability has focused on\nmodels where function-based continuity criteria\nnaturally apply to tabular and image-based data\n(Alvarez-Melis and Jaakkola, 2018; Zhang et al.,\n2020; Ghorbani et al., 2019). However, text data in\nnatural language is not so amenable to such direct\nquantification. Therefore, the process of generat-\ning appropriate perturbations to test stability in text\nexplanations remains little explored (Ivankay et al.,\n2022). Unlike perturbations in tabular or image-\nbased data, text perturbations pose unique chal-\nlenges to satisfy necessary constraints of semantic\nsimilarity and syntactic consistency. Violation of\narXiv:2305.12351v2  [cs.LG]  15 Oct 2023\n\nthese constraints can create a fundamentally differ-\nent meaning conveyed by the document. Under the\nassumption the explanatory algorithm works cor-\nrectly, these perturbations may alter the resulting\nexplanation, where quantifying difference between\nexplanations also needs to characterize their prop-\nerties, such as feature ordering and weights within\nexplanations presented in Fig. 1.\nIn this paper, we explore the stability of expla-\nnations generated on text data via LIME (Ribeiro\net al., 2016), which is a widely used explanatory al-\ngorithm in XAI frameworks. We first examine the\ninherent stability of LIME by altering the number of\nsamples generated to train the surrogate model. Us-\ning this baseline, we then propose XAIF OOLER , a\nnovel algorithm that perturbs text inputs and manip-\nulates explanations to investigate in depth the sta-\nbility of LIME in explaining text classifiers. Given\na document, XAIF OOLER proceeds with iterative\nword replacements conforming to the specified con-\nstraints, which are guided by Rank-biased Over-\nlap (RBO) that satisfies all the desired characteris-\ntics for explanation similarity measure. As such,\nXAIF OOLER yields advantages that only small per-\nturbations on the least important words are needed,\nwhile the semantics and original prediction of the\ninput are preserved yet top-ranked explanation fea-\ntures are significantly shifted. Fig. 1 shows an\nexample that XAIF OOLER only performs two per-\nturbations (i.e., “gets” → “becomes” and “regu-\nlarly” → “consistently”), but effectively demotes\nthe top-3 features–e.g., “joint” (3rd-rank)→(11th-\nrank), that explains the “joint pain” symptom with-\nout changing the prediction ofpeptic ulcers disease.\nOur contributions are summarized as follows.\n• We assess the inherent instability of LIME as a\npreliminary step towards better understanding of\nits practical implications, which also serves as a\nbaseline for subsequent stability analysis.\n• We cast investigation on the stability of LIME as\na text perturbation optimization problem, and in-\ntroduce XAIF OOLER with thoughtful constraints\nand explanation similarity measure RBO to gener-\nate text perturbations that effectively manipulates\nexplanations while maintaining the class predic-\ntion in a cost-efficient manner.\n• We conduct extensive experiments on real-world\ntext datasets, which validate that XAIF OOLER\nsignificantly outperforms all baselines by large\nmargins in its ability to manipulate LIME’s expla-\nnations with high semantic preservability.\n2 Background\n2.1 LIME\nIn this paper, we adopt Local Interpretable Model-\nagnostic Explanations (LIME) (Ribeiro et al., 2016)\nas our target explanatory algorithm. LIME has\nbeen a commonly researched and referenced tool in\nXAI frameworks, which is integrated into critical\nML applications such as finance (Gramegna and\nGiudici, 2021) and healthcare (Kumarakulasinghe\net al., 2020; Fuhrman et al., 2022). To explain a pre-\ndiction, LIME trains a shallow, explainable surro-\ngate model such as Logistic Regression on training\nexamples that are synthesized within the vicinity of\nan individual prediction. The resulting explanation\nis a subset of coefficients of this surrogate model\nthat satisfies the fundamental requirement for in-\nterpretability. In NLP, explanations generated by\nLIME are features–e.g., words, returned from the\noriginal document, which can be easily understood\neven by non-specialists.\n2.2 XAI Stability\nExisting research work on XAI stability has a pre-\ndominant emphasis on evaluating models using\ntabular and/or image data across various interpreta-\ntion methods, which often use small perturbations\nto the input data to generate appreciable different\nexplanations (Alvarez-Melis and Jaakkola, 2018;\nGhorbani et al., 2019; Alv"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12352"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12352",
+            "url": "https://arxiv.org/abs/2305.12352",
+            "pdf_url": "https://arxiv.org/pdf/2305.12352.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12352.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12352.txt",
+            "page_count": 19,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12352",
+                "url": "https://arxiv.org/abs/2305.12352",
+                "source": "arxiv.org",
+                "summary": "Data-driven Mixed Integer Optimization through Probabilistic\nMulti-variable Branching\nYanguang Chen∗1, Wenzhi Gao†2, Wanyu Zhang‡3, Dongdong Ge§4, Huikang Liu¶4, and Yinyu\nYe‖2,3\n1Shanghai University of Finance and Economics\n2ICME, Stanford University\n3Management Science and Engineering, Stanford University\n4Antai College of Economics and Management, Shanghai Jiao Tong University\nApril 8, 2025\nThis paper introduces Probabilistic Multi-Variable Branching ( PMVB), a simple yet highly flexible technique\nfor accelerating mixed-integer optimization using data-driven machine learning models. At its core, PMVB employs\na multi-variable cardinality branching procedure that partitions the feasible region with data-driven hyperplanes,\nrequiring only two lines of code for implementation. Moreover, PMVB is model-agnostic and can be readily inte-\ngrated with various machine learning approaches. Leveraging tools from statistical learning theory, we develop\ninterpretable hyperparameter selection strategies to enhance its performance. Furthermore, we extend our ap-\nproach to a data-free setting, where the root LP relaxation serves as a surrogate prediction model, and we\nprovide theoretical analysis to justify this idea. We evaluate PMVB by incorporating it into state-of-the-art MIP\nsolvers and conducting experiments on both classic benchmark datasets and real-world instances. The results\ndemonstrate its effectiveness in significantly improving MIP-solving efficiency.\n1 Introduction\nMixed Integer Programming (MIP)[41, 48] is a core modeling tool in applications such as revenue management\n[5], production planning [38], portfolio optimization [49], and energy management [50]. Despite their broad ap-\nplicability, MIPs are hard to solve, and state-of-the-art solvers [12, 18, 22, 37] rely on heuristics to be useful in\npractice. Designing effective heuristics has been a long-standing topic in MIP solving.\nAmong various MIP applications, many exhibit a strong online nature: similar instances with varying data pa-\nrameters are solved on a regular basis [50, 38]. These applications open up the way for integrating machine\nlearning (ML) techniques with MIP solving: ML models can extract solution patterns from historical data and\nuse this information to accelerate repeated solving tasks. When applied to models with similar structures and\nvarying data parameters, these methods often yield improved performance.\n∗2017212301@live.sufe.edu.cn\n†gwz@stanford.edu, equal contribution\n‡zwanyu@stanford.edu, equal contribution\n§dongdong@gmail.com\n¶hkliu@gmail.com\n‖yyye@stanford.edu\n1\narXiv:2305.12352v3  [math.OC]  4 Apr 2025\n\nML+MIP approaches typically start by designing or specifying a learning model to handle the MIP information.\nThese approaches range from classic machine learning models to sophisticated deep network architectures. Ex-\namples include supervised methods such as k-nearest neighbors and support vector machine [52], tree-based\nmodels [1], and the widely adopted graph neural networks (GNN) [23, 31]. Recently, there has been increasing\ninterest in leveraging reinforcement learning techniques to accelerate MIP solving [7, 42, 43, 51] (see T able 1for\na summary and further details). These advanced learning approaches more efficiently capture the structure of\nMIP instances and undergird the success of these ML+MIP attempts.\nTable 1: Summary of ML+MIP approaches. GNN: graph neural networks; RL: reinforcement learning; DNN: Deep\nNeural Network; DQN: Deep Q-Network\nRef Model Application\n[35] GNN Learn to dive and branch\n[52] k-NN and SVM Learn affine subspaces\n[36] RL Generate near-optimal solutions\n[27] GNN Learn variable biases\n[17] GNN Learn a variable selection policy\n[13] GNN Learn to predict solutions\n[1] Extremely Randomized Trees Learn to branch\n[23] GNN Predict the variable probability\n[55] GNN Learn to generalize branching\n[31] GNN Learn neighborhood size for local branching\n[21] GNN, DNN, RL Develop a GNN-MIP hybrid model\n[44] GNN, RL, DQN, DNN Learn to select neighborhoods for LNS\n[39] RL, GNN Reinforcement learning-based branching\n[30] Transformer Tree-aware transformer-based branching\nAfter a learning model is established, its output is used to speed up MIP solving, usually by modifying the\nbehavior of the standard branch-and-bound procedure. In [1, 26], the authors use machine learning models to\nimitate the behavior of an expensive branching rule in MIP. [13] directly predict the values of the binary variables\nand proposes to add a cut that upper-bounds the distance between prediction and the MIP solution, but they\ndo not further analyze this method. [35] also adopt a graph representation of MIP to predict binary variables,\nand proposes to combine the prediction with MIP diving heuristic (neural diving). In [17], the authors propose\nto learn the branching variable selection policy during the branch-and-bound procedure. [29] adopts imitation\nlearning to learn a good pruning policy for nonlinear MIPs. Though most ML+MIP studies are empirical, there\nexist works in statistical learning theory that study the learnability of MIPs. In [2], the authors derive the gen-\neralization bound for learning hybrid branching rules that take convex combination of different score functions.\nIn [3], the bound is further improved for the MIP branch and bound procedure. In the same line of work, [4]\nanalyze the learnability of mixed integer and Gomory cutting planes.\nWhile existing ML+MIP methodologies have demonstrated promising results, they suffer from two key drawbacks.\nFirst, most available methods require modifications to the branch-and-bound procedure of standard MIP solvers\n(for example, [35, 17]), making them challenging to deploy without access to the solver’s source code or an ad-\nvanced call-back interface. Second, these ML-based approaches often involve hyperparameters that are not easily\ninterpretable, thereby demanding extensive manual tuning efforts.\nIn view of the challenges, in this paper we propose PMVB, a Probabilistic Multi-variable Branching approach for\nMIP solving. PMVB relies on a probabilistic estimate of binary (integer) variables and applies a simple but efficient\nmulti-variable cardinality branching procedure that constructs branching hyperplanes that take the form\nP\ni∈S yi ≤ ξ and P\ni∈S yi ≥ ξ + 1, {yi} binary.\n2\n\nOur method is simple yet effective, and in particular, our contributions include:\nFirst, we develop a risk pooling technique to generate statistical inequalities (branching hyperplanes) on MIP\nbinary variables using the probabilistic output of any ML prediction model. We show that the MIP optimal solu-\ntion satisfies the inequalities with high probability under statistical assumptions [47]. Adding these inequalities\nto the original problem could reduce the solving time at almost no additional implementation cost. The method\nis simple, effective, and compatible with most ML models/MIP solvers, and it can be applied as a standalone\nheuristic.\nBased on the hyperplanes [25, 14], we propose PMVB, a probabilistic multi-variable cardinality branching [16, 54]\nmethod to accelerate MIP solving. Specifically, we create two probabilistic hyperplanes for variables predicted to\nbe 0 and 1. These two hyperplanes divide the problem into four subproblems. PMVB first solves the subproblem\nwith these two inequalities holding with high probability and gets a near-optimal objective value c. Then, we\nadd the inequality that the objective value is no bigger than c (for minimization) to the other three subproblems,\nso that they could be quickly pruned.\nWe extend our risk pooling idea to the “data-free” case, where no history data is available and ML prediction is\ninaccessible. In this case, we instead use the solution to the MIP root relaxation as the prediction result and apply\nPMVB. Numerical results on various benchmark datasets show that PMVB still yields a nontrivial improvement.\n1.1 Outline of the paper\nThe paper is organized as follows. In Section 2, we introduce P"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12353"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12353",
+            "url": "https://arxiv.org/abs/2305.12353",
+            "pdf_url": "https://arxiv.org/pdf/2305.12353.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12353.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12353.txt",
+            "page_count": 23,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12353",
+                "url": "https://arxiv.org/abs/2305.12353",
+                "source": "arxiv.org",
+                "summary": "Draft version May 23, 2023\nTypeset using LATEX twocolumn style in AASTeX63\nDetection of thermal Sunyaev–Zel’dovich Eﬀect in the circumgalactic medium of low-mass galaxies - a\nsurprising pattern in self-similarity and baryon suﬃciency\nSanskriti Das, 1, 2 Yi-Kuan Chiang, 3, 4 and Smita Mathur 2, 4\n1Kavli Institute for Particle Astrophysics and Cosmology, Stanford University, 452 Lomita Mall, Stanford, CA 94305, USA\n2Department of Astronomy, The Ohio State University, 140 West 18th Avenue, Columbus, OH 43210, USA\n3Institute of Astronomy and Astrophysics, Academia Sinica, Astronomy-Mathematics Building, No. 1, Section 4, Roosevelt Road, Taipei\n10617, Taiwan\n4Center for Cosmology and Astroparticle Physics, 191 West Woodruﬀ Avenue, Columbus, OH 43210, USA\n(Accepted May 19, 2023)\nABSTRACT\nWe report on the measurement of the thermal Sunyaev–Zel’dovich (tSZ) Eﬀect in the circumgalactic\nmedium (CGM) of 641,923 galaxies with M ⋆=109.8−11.3M⊙ at z <0.5, pushing the exploration of tSZ\nEﬀect to lower-mass galaxies compared to previous studies. We cross-correlate the galaxy catalog\nof WISE and SuperCosmos with the Compton- y maps derived from the combined data of Atacama\nCosmology Telescope and Planck . We improve on the data analysis methods (correcting for cosmic\ninfrared background and Galactic dust, masking galaxy clusters and radio sources, stacking, aperture\nphotometry), as well as modeling (taking into account beam smearing, “two-halo” term, zero-point\noﬀset). We have constrained the thermal pressure in the CGM of M ⋆=1010.6−11.3M⊙ galaxies for\na generalized NFW proﬁle and provided upper limits for M ⋆=109.8−10.6M⊙ galaxies. The relation\nbetween M500 (obtained from an empirical M⋆–M200 relation and a concentration factor) and ˜Ysph\nR500 (a\nmeasure of the thermal energy within R 500) is >2σ steeper than the self-similarity and the deviation\nfrom the same that has been reported previously in higher mass halos. We calculate the baryon fraction\nof the galaxies, fb, assuming the CGM to be at the virial temperature that is derived from M 200. fb\nexhibits a non-monotonic trend with mass, with M ⋆=1010.9−11.2M⊙ galaxies being baryon suﬃcient.\nKeywords: Sunyaev-Zeldovich eﬀect — Millimeter astronomy — Extragalactic astronomy — Observa-\ntional Cosmology — Circumgalactic medium — Hot Intergalactic medium — Hot ionized\nmedium — Galaxy evolution — Galaxy environments — Galactic winds — Galaxy pro-\ncesses — Cosmic microwave background radiation\n1. INTRODUCTION\nThe circumgalactic medium (CGM) is the multiphase\nhalo of gas and dust surrounding the stellar disk and the\ninterstellar medium (ISM) of a galaxy (Putman et al.\n2012; Tumlinson et al. 2017; Mathur 2022; Faucher-\nGiguere & Oh 2023). As a nexus of the accretion from\nthe intergalactic medium (IGM), galactic outﬂow, and\nrecycling precipitation, the CGM plays a crucial role\nin the formation and evolution of a galaxy and might\nharbor the missing galactic baryons (Cen & Ostriker\n1999). The most massive and volume-ﬁlling phase of the\nCorresponding author: Sanskriti Das\nsnskriti@stanford.edu\nCGM is predicted to be ⩾ 106 K hot and fully ionized\n(e.g., Spitzer 1956; Schaye et al. 2015; Hopkins et al.\n2018; Nelson et al. 2018; Li & Tonnesen 2020). This\nhot gas can be observed in the emission and absorption\nlines of highly ionized (He-like, H-like) metal ions and\nfree-free continuum emission in X-ray (Mathur 2022),\nand the Sunyaev-Zel’dovich (SZ) eﬀect (Sunyaev & Zel-\ndovich 1969; Mroczkowski et al. 2019).\nThe SZ eﬀect is a distortion in the spectrum of the\ncosmic microwave background (CMB) due to the inverse\nCompton scattering of the CMB photons with the free\nelectrons in the intervening ionized media (Sunyaev &\nZeldovich 1969). Thermal SZ (tSZ) eﬀect, the strongest\nof diﬀerent SZ eﬀects, is characterized by the Compton-\narXiv:2305.12353v1  [astro-ph.GA]  21 May 2023\n\n2 Das, Chiang & Mathur\ny parameter: y = (σT/mec2)\n∫\nPedl1. It is a measure of\nthe thermal pressure (P e =nekBTe) or thermal energy\ndensity of the free electrons of the relevant medium inte-\ngrated along the line-of-sight. If the physical properties\nof the halo gas are driven by the gravitational potential,\nthe thermal energy of the halo gas (∝\n∫\nPedV∝\n∫\nydA)\nwould solely depend on the virial mass of the halo; re-\nferred to as self-similarity. However, simulations predict\nthat the self-similarity breaks in low-mass halos as the\nrole of galactic feedback becomes increasingly important\ncompared to the gravitation (e.g., Lim et al. 2021; Kim\net al. 2022; Pop et al. 2022).\nThe hot CGM of the Milky Way has been extensively\nobserved in X-ray emission (e.g., Snowden et al. 2000;\nHenley et al. 2010; Das et al. 2019a; Kaaret et al. 2020;\nGupta et al. 2021; Bluem et al. 2022; Gupta et al. 2023;\nBhattacharyya et al. 2023) and X-ray absorption (e.g.,\nWilliams et al. 2005; Gupta et al. 2012; Nicastro et al.\n2016; Gatuzz & Churazov 2018; Das et al. 2019c, 2021a;\nLara-DI et al. 2023). It is incredibly challenging to probe\nthe hot CGM of external galaxies in emission due to\nthe spatially and temporally variable foreground dom-\ninating the total X-ray emission. So far, the extended\nemission from the hot CGM has been detected around\na handful of individual massive (M⋆ >1011.3M⊙) super-\nL⋆ galaxies (e.g., Anderson et al. 2016; Bogd´ an et al.\n2017; Li et al. 2017) and one external L ⋆ galaxy (Das\net al. 2019b, 2020). There have also been stacking ef-\nforts to detect the CGM in emission by cross-correlating\nthe eROSITA data with galaxy catalogs atz <0.1 (Cha-\ndayammuri et al. 2022; Comparat et al. 2022).\nHowever, X-ray emission is biased toward gas at\nhigher density and higher emissivity, and thus it is pri-\nmarily sensitive to the inner region of the CGM. X-ray\nabsorption is not aﬀected by the bias mentioned above,\nbut it has sparse spatial sampling due to pencil beams.\nAlso, X-ray absorption entirely depends on metal ions\nwhich makes the results dependent on assumed abun-\ndance ratios of metals and metal-to-hydrogen ratio. In\naddition to that, the lack of suﬃcient X-ray bright\nQSO (quasi-stellar object) sightlines passing through\nthe CGM of external galaxies limits the scope to probe\nthe hot CGM of external galaxies in absorption (e.g.,\nMathur et al. 2021; Nicastro et al. 2023).\nThe SZ eﬀect, on the other hand, does not suﬀer from\nthe observational biases of X-ray emission, or the re-\nstricted spatial coverage and the metallicity dependence\nof X-ray absorption. Also, the redshift independence of\n1σT,me and c are Thompson’s scattering cross section, rest mass\nof the electron, and the speed of light in vacuum, respectively.\nthe SZ Eﬀect allows one to study the CGM across cosmic\ntime. Therefore, the SZ eﬀect is a powerful technique\nto characterize the CGM and test self-similarity in the\nhalo of galaxies, complementary to X-ray observations.\nUnlike spectroscopy, the tSZ eﬀect cannot distin-\nguish between the hot CGM and the partially ionized\ncool/warm (104−6 K) CGM. However, the hot CGM has\na higher temperature (T e) and higher dispersion mea-\nsure (DM =\n∫\nnedl) compared to the cooler phases of the\nCGM (e.g., the hot CGM of the Milky Way contributes\nto the DM of the Galactic halo≈an order-of-magnitude\nmore than all other phases of the CGM combined; see\nDas et al. 2021b). That makes the hot CGM the primary\ncontributor to the tSZ eﬀect of any galaxy halo.\nUsing the Planck data, the detection of the tSZ ef-\nfect has been reported in the CGM of massive (M ⋆ >\n1011.3 M⊙) locally brightest galaxies (LBGs) and galaxy\ngroups at z ≲ 0.1 (Planck Collaboration et al. 2013;\nGreco et al. 2015; Lim et al. 2018) and the large-\nscale structure of the universe up to z=1 (Chiang\net al. 2020, 2021). Recently, the combined maps\nof Planck +Atacama Cosmology Telescope (ACT) and\nPlanck +South Pole Telescope (SPT) has been cross-\ncorrelated with galaxy catalogs at 0 .5 ⩽ z ⩽ 1.5, again\nfocusing on massive galaxies and galaxy groups (Schaan\net al. 2021; Meinke et al. 2021; Vavagiakis et al. 2021;\nPandey et al"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12354"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12354",
+            "url": "https://arxiv.org/abs/2305.12354",
+            "pdf_url": "https://arxiv.org/pdf/2305.12354.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12354.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12354.txt",
+            "page_count": 10,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12354",
+                "url": "https://arxiv.org/abs/2305.12354",
+                "source": "arxiv.org",
+                "summary": "Bi-ViT: Pushing the Limit of Vision Transformer Quantization\nYanjing Li1, Sheng Xu1, Mingbao Lin2, Xianbin Cao1, Chuanjian Liu4, Xiao Sun5, Baochang Zhang1,3\n1 Beihang University 2 Tencent 3 Zhongguancun Laboratory\n4 Huawei Noah’s Ark Lab 5 Shanghai AI Laboratory\nyanjingli@buaa.edu.cn\nAbstract\nVision transformers (ViTs) quantization offers a promis-\ning prospect to facilitate deploying large pre-trained net-\nworks on resource-limited devices. Fully-binarized ViTs\n(Bi-ViT) that pushes the quantization of ViTs to its limit re-\nmain largely unexplored and a very challenging task yet,\ndue to their unacceptable performance. Through extensive\nempirical analyses, we identify the severe drop in ViT bina-\nrization is caused by attention distortion in self-attention,\nwhich technically stems from the gradient vanishing and\nranking disorder. To address these issues, we ﬁrst introduce\na learnable scaling factor to reactivate the vanished gradi-\nents and illustrate its effectiveness through theoretical and\nexperimental analyses. We then propose a ranking-aware\ndistillation method to rectify the disordered ranking in a\nteacher-student framework. Bi-ViT achieves signiﬁcant im-\nprovements over popular DeiT and Swin backbones in terms\nof Top-1 accuracy and FLOPs. For example, with DeiT-\nTiny and Swin-Tiny, our method signiﬁcantly outperforms\nbaselines by 22.1% and 21.4% respectively, while 61.5 ×\nand 56.1× theoretical acceleration in terms of FLOPs com-\npared with real-valued counterparts on ImageNet.\n1. Introduction\nTransformers, which have gained far-ﬂung fame in nat-\nural language processing (NLP) area [8, 28], are also at-\ntracting increasing attention in lots of computer vision (CV)\ntasks, such as object detection [4], image classiﬁcation [9]\nand many others [13, 31], impelling the widespread re-\nsearch on vision transformers (ViTs). There has a natural ﬁt\nfor ViTs to achieve better performance simply by training\na larger model on a larger data set. For example, historical\nrecords show better performance of a ViT-H model [9] ac-\ncompanying with astonishing 632M parameters and 162G\nFLOPs. Such a high model complexity poses a great chal-\nlenge to deploy models on platforms with short resource\nsupplies. Therefore, both academia and industry call for\nan ultimate compression of these large models, and the\n706050403020103284321\n3284321\n70605040302010\n80\nAccuracy\nAccuracy\n# Bits # Bits\nSharp Drop~ 52.6 % ↓Sharp Drop~ 61.9 % ↓\n(a) DeiT-Tiny(b) DeiT-Small\nFigure 1. Performance of real-valued and quantized DeiT [32] with\nvarying bit-widths. We report results with (a) DeiT-Tiny and (b)\nDeiT-Small on ImageNet [17], respectively. Here 8-bit DeiT is\nquantized with PTQ method [22] and 2/3/4 bit DeiT is trained with\nQAT method [18]. The binarized ViT is conducted with the base-\nline method Bi-Real Net [26].\npast years have witnessed some promising techniques such\nas network pruning [38, 5], low-rank decomposition [7],\nknowledge distillation [12], and quantization [18, 19].\nNetwork quantization, which represents weights and ac-\ntivations in a low-bit format, has got great earnestness of\nmany researchers for its reduced memory access costs and\nincreased compute efﬁciency as well as performance ben-\neﬁt. Using the lower-bit quantized data, in particular to\nthe extreme 1-bit case, requires less data movement, both\non-chip and off-chip, and therefore reduces memory band-\nwidth and saves signiﬁcant energy. Existing documentary\nrecords observe 32× less network size and 58× speedups\nbeneﬁcial from xnor and bit-count logics for 1-bit net-\nworks [30]. Earlier attempts [25, 22] apply post-training\nquantization (PTQ) [1, 40] directly to ViTs without data-\ndriven ﬁne-tuning, causing sub-optimal performance, in\nparticular to impotent 1-bit ViTs. Therefore, by quantiz-\ning while training, quantization-aware training (QAT) meth-\nods are more congenial to 1-bit ViTs. Extensive empiri-\ncal studies [24, 20, 36, 28] have well demonstrated the ef-\nﬁcacy of QAT methods in 1-bit convolutional neural net-\nworks (CNNs) or BERTs, however, the application to 1-bit\nViTs remains not to be fully explored so far.\narXiv:2305.12354v1  [cs.CV]  21 May 2023\n\nIn this paper, we ﬁrst build a fully-binarized ViT base-\nline, a straightforward solution constructed upon popular\nbinarized QAT method of Bi-Real Net [26]. Through an\nempirical study of this baseline, we observe signiﬁcant per-\nformance drops on the ImageNet dataset [17], as shown\nin Fig. 1. For instance, extending Bi-Real Net to binarize\nDeiT-Tiny [32] incurs a tremendous performance gap of\n52.6% in the Top-1 accuracy compared to the 2-bit quan-\ntized counterpart. Similar performance drops occur in DeiT-\nSmall as well. Delving into a deeper analysis, we ﬁnd that\nthe incompatibility of existing QAT methods mainly stems\nfrom the binarized self-attention module in ViTs, where\na simple application of existing binarization methods [26]\nleads to severe attention distortion, as plotted in Fig. 2 (a)\nand Fig. 2 (b), especially in the diagonal scores of the map\nwhich are supposed to be the most attentive.\nIn this paper we dig deeper into this attention distortion\nproblem. Through empirical analysis, we ﬁnd that this phe-\nnomenon is mainly caused by gradient vanishing due to the\nstraight-through-estimator (STE) [2] and non-scaled bina-\nrization in self-attention. Meanwhile, a simple distillation\nutilizing distillation token in DeiT [32] and KL-divergence\nin ReActNet [24] is ineffective in dismissing the ranking\ndisorder, since it neglects the relative order of the atten-\ntion map between the binarized ViTs and their real-valued\ncounterpart. To address the aforementioned issues, a fully-\nbinarized ViT (Bi-ViT) is developed by reactivating the van-\nished gradients through a learnable scaling factor in self-\nattention and a ranking-aware distillation to further effec-\ntively rectify the disordered ranking of attention (see the\noverview in Fig. 3). In addition, we also provide both em-\npirical and theoretical analysis about how our method can\nrectify the distorted attention and thus promote the opti-\nmization of Bi-ViT. The contributions of our work are sum-\nmarized as:\n• We identify the bottleneck of a fully-binarized ViT\nthrough empirical analyses and formulate the problem\nin a theoretical perspective. Based on these, we intro-\nduce learnable head-wise scaling factor into binarized\nself-attention to reactivate the vanished gradients.\n• We develop a ranking-aware distillation scheme to\neliminate attention distortion. Our distillation method\nfully utilizes the ranking-aware knowledge from the\nreal-valued teacher to promote the optimization of Bi-\nViT.\n• Our Bi-ViT is the ﬁrst promising way to push the\nlimit of ViT quantization to the fully-binarized ver-\nsion. Extensive experiments on the ImageNet bench-\nmark demonstrate that Bi-ViT surpasses both the base-\nline and prior binarized methods by a signiﬁcant mar-\ngin, achieving a remarkable acceleration rate of up to\n61.5×.\n(a)Bi-Real Net+Distill Token(c) Bi-ViT(d) Real-valued\nHead 0Head 1Head 2\n(b) Bi-Real Net+ KL divergence\nFigure 2. Visualization of the attention map before softmax in\nthe ﬁrst block of DeiT-Tiny [32] on ImageNet [17]. From the\nleft to right, is the baseline method [26], previous binarization\nmethod [36], our Bi-ViT and real-valued counterpart.\n2. Related Work\nVision Transformer. Unlike traditional CNN-based mod-\nels, ViTs are capable of capturing long-range visual rela-\ntionships through the self-attention mechanism, and offer\na more generalizable paradigm without inductive bias spe-\nciﬁc to images. The starting ViT [9] views an image as a se-\nquence of 16× 16 patches and uses a unique class token to\npredict the classiﬁcation, yielding promising results. Subse-\nquently, many works, such as DeiT [32] and PVT [35], have\nimproved upon ViT, making it more efﬁcient and applica-\nble to downstream tasks. However, these high-performing\nViTs have also accompanied with a signiﬁcant number\nof parameters and high "
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12355"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12355",
+            "url": "https://arxiv.org/abs/2305.12355",
+            "pdf_url": "https://arxiv.org/pdf/2305.12355.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12355.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12355.txt",
+            "page_count": 8,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12355",
+                "url": "https://arxiv.org/abs/2305.12355",
+                "source": "arxiv.org",
+                "summary": "Development of AC-LGAD detector with ﬁner pitch\nelectrodes for high energy physics experiments\nSayuka KITA 1, Koji NAKAMURA 2, Tomoka IMAMURA 1, Ikumi GOYA1,Kazuhiko\nHARA 3\n1 Graduate School of Science and Technology, University of Tsukuba, 1-1-1 Tennodai,\nTsukuba, Ibaraki, 305-8571, Japan\n2Institute of Particle and Nuclear Studies, High Energy Research Organization, 1-1 Oho,\nTsukuba, Ibaraki, 305-0801, Japan\n3 Faculty of Pure and Applied Sciences and Tomonaga Center for the History of the Universe,\nUniversity of Tsukuba, 1-1-1 Tennodai, Tsukuba, Ibaraki, 305-8571, Japan\nE-mail: kita@hep.px.tsukuba.ac.jp, Koji.Nakamura@cern.ch\n(Received May 23, 2023)\nLow-Gain Avalanche Diode (LGAD) sensor is one of candidate sensors for the tracker at fu-\nture hadron collider experiments. To use this sensor as a tracking detector, AC-LGAD sensor\nis being developed which has both timing and spatial resolutions. In high luminosity environ-\nments, good timing resolution (typically 30 ps) together withO(10 µm) spatial resolution helps\nto reduce pileup effect and reconstruct tracks correctly. By optimizing fabrication parameters,\n80 µm pitch strip and 100 µm pitch pixel sensors are successfully produced. The signal height\n(MPV) was 39.26 ±0.08 mV and 128.9 ±3.3 mV, respectively, for penetrating β particles. The\nobserved 60% of signal reduction of the strip sensor is explained by a larger inter-electrode\ncapacitance compared with the pixel sensor. In this paper, we present the performance of\nﬁne electrode pitch AC-LGAD sensors including the pulse height and cross-talk of pixel and\nstrip type sensors evaluated using a β-ray source and the detection efﬁciency measured in an\n800 MeV electron beam.\nKEYWORDS: silicon, tracker, LGAD, AC-LGAD\n1. Introduction\nTracking detectors in future high-energy and high-luminosity hadron colliders are re-\nquired to correctly assign the tracks associated to the hard scattering vertex among huge\nnumber of pileup vertices. Up to 200 collisions are expected in an event at the HL-LHC ATLAS\nexperiment [1] and 10 times more in the future circular hadron collider. In such an environ-\nment, a revolution in the tracking system is required, e.g., realization of a time resolution of\nO(10) ps in addition to a spatial resolution of O(10) µm.\nThe Low-Gain Avalanche Diode (LGAD) is a semiconductor detector with improved time\nresolution. Presently a time resolution of 30 ps [2] has been achieved for minimum ionizing\nparticles (MIPs). In realizing the spatial resolution with LGAD, we have identiﬁed potential\ndifﬁculties in improving the granularity of the electrodes [3, 4] without decreasing the active\narea fraction. To solve the issue, a capacitively-coupled LGAD sensor (AC-LGAD) [5] has been\ndeveloped by KEK and University of Tsukuba in collaboration with Hamamatsu Photonics\nK.K. (HPK). In the previous study [6], the three process parameters, n+ and p+ implant con-\ncentrations and electrode coupling capacitance, were varied and the fundamental AC-LGAD\nperformance was evaluated to optimize the parameters.\n1\narXiv:2305.12355v1  [physics.ins-det]  21 May 2023\n\nIn this paper, the performance of ﬁne electrode pitch sensors with pixel type and strip type\nelectrodes is described.\n2. AC-LGAD prototypes\nThe LGAD sensor is basically an n+-in-p semiconductor diode, containing an additional\np+ layer under the n+ electrode with a larger boron doping compared to that in the p-bulk\nregion. The additional layer makes an extremely high electric ﬁeld, typically over 300 kV/cm,\nbetween n+ and p+. Such a large electric ﬁeld induces avalanche multiplication, increasing\nthe number of electron and hole pairs by about 10-20 times of that originally produced by\na MIP. Superior time resolution is a consequence of rapid movement of a large number of\nelectrons and holes created in the gain region by the high electric ﬁeld. Concerning the spatial\nresolution improvement, the granularity of the electrodes is increased. In case where the gain\nlayers (combination of n+ and p+) are formed separately for each direct-coupled electrode,\nthe regions between the n+ electrodes have no gain hence the ﬁll factor is low as described\nin [4]. To overcome this feature, a capacitively-coupled LGAD (AC-LGAD) sensor, as shown in\nFig. 1(a), has been developed. A single uniform gain layer is placed over the sensor active area\nand for the segmented readout, patterned aluminum electrodes are placed on the oxide layer,\nand the induced signal is read out capacitively. The uniform gain layer eliminates the inactive\nregions as the avalanche multiplication occurs uniformly across the entire active area.\nFig. 1(b) illustrates the signal readout principle of the AC-LGAD sensor and equivalent\ncircuit. The signal charge produced by the avalanche ( Q0) ﬂows in two paths; one is read out\nvia coupling capacitors ( Ccp), and the other is cross-talk through the n+ implant that has an\neffective resistance ( Rimp). The read out charge ( Q) is determined by the impedance ratio of\nthe two, ZCcp and ZRimp, which are the impedances of Ccp and Rimp, respectively. Additional\ncross-talk is expected via inter-electrode capacitance ( Cint) in case ZCint is large and becomes\ncomparable to ZCcp. Although a presence of cross-talk to the neighboring electrodes throughn+\nlayer is a feature of AC-LGAD sensor, optimization study of n+ and p+ doping concentrations\nsucceeded in suppressing the cross-talk reasonably small and keeping the signal height large,\nas described in [5] and [6].\nn+\np++\np-\ne-\ne-\ne-\nh\nh\nh\ne-\ne-\ne-\nh\nh\ne-\ne- h\nh\ne-\ne- h\nh\ne-\ne- h\nh\ne-\ne- h\nh\ne-\ne- h\nh\nh\nh\ne- h\nhn++ n++\nSiO2Al\nDC elec AC elec\np+\nn+\n(a) AC-LGAD detector\nn+\np+\nCint Cint\nCcp Ccp Ccp\nRimp Rimp\nCbulk (b) Signal readout model of AC-LGAD\nFig. 1. AC-LGAD detector (left) and signal readout model of AC-LGAD (right).\nAccording to the signal readout model, the coupling capacitance ( Ccp) and inter electrode\ncapacitance (Cint) are the important parameters to be optimized while the effective n+ resis-\ntance (Rimp) is optimized to be as large as possible but avoiding the depletion to reach the insu-\nlator. The Ccp was varied by the thickness of the insulator (a combination of silicon dioxide and\nsilicon nitride) layer as well as the area of the electrode. The thickness of the insulator layer\n2\n\nwas varied so that the coupling capacitance is 120 pF/mm 2, 240 pF/mm 2 and 600 pF/mm 2,\neach for the two n+ resistivity points, as summarized in Table I. Since the Al electrode deter-\nmines the granularity of the device, sensors with various pitches are tested. All the prototype\nsensors used for the study in this article are summarized in Table II.\nTable I. Summary of six prototype variations in n+ implant concentrations and coupling capaci-\ntances, Ccp.\nCcp [pF/mm2]\nn+ resistivity [Ω/□] 600 240 120\n1600 E600 E240 E120\n400 C600 C240 C120\nThe p+ concentration was tuned to keep the LGAD operation voltage in a range for each\nof the n+ resistivity points. The operation voltage is similarly 190 V among C-type senors and\n160 V among E-type sensors, so the sensor performance of each type can be compared at the\nsame bias voltage.\nTable II. Physical parameters of the produced sensor types; Strip and Pixel. The overall size, elec-\ntrode pitch, electrode width, and the numbers of electrodes in column and row directions are summa-\nrized. \"Cut Strip\" contains strips of different lengths (200µm ∼ 8890µm) in one sensor.\nSensor type Strip Cut Strip Pixel\noverall dimension (mm) 11.2 × 2.7 2.4 × 2.4\nelectrode pitch (µm) 80 100×100 150 ×150 200 ×200\nelectrode 40, 45, 60, 70 40, 60 90 140 190\ndimension (µm) ×9880 ×200∼8890 ×90 ×140 ×190\n#column×#row 16×1 10×10 6 ×6 5 ×5\n3. Performance dependence on the fabrication parameters\n3.1 Experimental procedure using β source\nThe sensor performance dependence on the sensor fabrication parameters is evaluated\nby injecting 90Sr β-ray as MIP. The reverse bias (negative voltage) is supplied to the rear of\nthe sensor via conductive tape attached on a KEK 16ch amp"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12356"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12356",
+            "url": "https://arxiv.org/abs/2305.12356",
+            "pdf_url": "https://arxiv.org/pdf/2305.12356.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12356.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12356.txt",
+            "page_count": 11,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12356",
+                "url": "https://arxiv.org/abs/2305.12356",
+                "source": "arxiv.org",
+                "summary": "Integer or Floating Point? New Outlooks for\nLow-Bit Quantization on Large Language Models\nYijia Zhang∗\nShanghai Jiao Tong University\nzhangyijia@sjtu.edu.cn\nLingran Zhao∗\nPeking University\ncalvinzhao@pku.edu.cn\nShijie Cao\nMicrosoft Research Asia\nshijiecao@microsoft.com\nWenqiang Wang\nShanghai Jiao Tong University\nwangwq20@sjtu.edu.cn\nTing Cao\nMicrosoft Research Asia\nting.cao@microsoft.com\nFan Yang\nMicrosoft Research Asia\nfanyang@microsoft.com\nMao Yang\nMicrosoft Research Asia\nmaoyang@microsoft.com\nShanghang Zhang\nPeking University\nshanghang@pku.edu.cn\nNingyi Xu\nShanghai Jiao Tong University\nxuningyi@sjtu.edu.cn\nAbstract\nEfﬁcient deployment of large language models (LLMs) necessitates low-bit quanti-\nzation to minimize model size and inference cost. While low-bit integer formats\n(e.g., INT8/INT4) have been the conventional choice, emerging low-bit ﬂoating-\npoint formats (e.g., FP8/FP4) offer a compelling alternative and are gaining support\nfrom cutting-edge hardware, such as NVIDIA’s H100 GPU. However, the superior-\nity of low-bit INT versus FP formats for quantization on LLMs remains unclear. In\nthis study, we conduct a comparative analysis of INT and FP quantization with the\nsame bit-width, revealing that the optimal quantization format varies across differ-\nent layers due to the complexity and diversity of tensor distribution. Consequently,\nwe advocate the Mixture of Formats Quantization (MoFQ) , which selects the\noptimal format on a layer-wise basis. This simple yet effective approach achieves\nstate-of-the-art results in both weight-only (W-only) and weight-activation (W A)\npost-training quantization scenarios when tested on LLaMA across various tasks.\nIn 4-bit W-only quantization, MoFQ surpasses GPTQ without complex hyperpa-\nrameter tuning and with an order of magnitude faster quantization speed. While\nin 8-bit W A quantization, MoFQ signiﬁcantly outperforms INT/FP-only methods,\nachieving performance close to the full precision model. Notably, MoFQ incurs\nno hardware overhead compared to INT/FP-only quantization, as the bit-width\nremains unchanged.\n1 Introduction\nLow-bit quantization plays a crucial role in the deployment of deep learning models due to its\ncapacity to minimize the model size and inference cost [18; 10]. The recent advent of large language\n∗These authors contributed equally to this work. Work done during internship at Microsoft Research Asia.\nPreprint. Under review.\narXiv:2305.12356v1  [cs.LG]  21 May 2023\n\nmodels (LLMs), which often contain tens or even hundreds of billions of parameters, has further\nintensiﬁed the need for effective quantization techniques [6; 20]. Conventional research in this domain\nhas primarily focused on employing low-bit integer (INT) formats for quantization [ 21; 13; 11].\nHowever, as the scale of LLMs expands, integer quantization faces challenges in maintaining the\neffectiveness observed in smaller models, thereby necessitating tailored optimizations or alternative\napproaches [7; 22; 8].\nRecently, low-bit ﬂoating-point (FP) formats have emerged as promising alternatives for DNN\nquantization [12; 15; 19; 4]. FP8 has already garnered support from leading hardware vendors, such\nas NVIDIA, whose H100 GPU offers identical peak performance for FP8 and INT8 operations [2].\nAdditionally, other CPU and GPU vendors, such as Intel, AMD, and Qualcomm, are actively\nincorporating FP8 capabilities into their hardware. Compared to INT formats with the same bit width,\nFP formats offer a typically larger data range and higher precision for small values but have lower\nprecision for large values and potentially higher hardware costs.\nGiven the notorious difﬁculty in quantizing LLMs, the relative effectiveness of INT and FP quantiza-\ntion remains ambiguous, motivating an interesting question: Considering that INT and FP formats\nwith the same bit width can represent the same number of discrete values (e.g., both INT8 and FP8\ncan represent 28 = 256 values) but differ in value distribution, what are the distinct impacts on\nmodel quantization and efﬁcient inference?\nTo answer this question, we conduct a comparative analysis of INT and FP formats, focusing on\nhardware efﬁciency and quantization error. First, we compare hardware efﬁciency by benchmarking\nthe cost of FP and INT multiply-accumulate (MAC) units. While FP MAC generally requires more\nhardware resources than INT MAC, the resource gap substantially narrows as the bit width decreases,\nwith FP8 and INT8 costs being notably similar. Next, we examine the quantization error of INT and\nFP formats through the statistical analysis of real tensors and layers sampled from the LLaMA model.\nOur ﬁndings reveal no consistent superior format for all tensors or layers due to the complexity and\ndiversity of tensor distribution. The optimal format is inﬂuenced by a combination of various factors,\nincluding the static/dynamic nature of tensors, outlier distribution, and quantization bit-width. For\nweight tensors with static distribution, INT quantization outperforms FP quantization at 8-bit but\nthis advantage diminishes at 4-bit. For activation tensors with dynamic distribution and signiﬁcant\noutliers, FP quantization surpasses INT quantization due to FP can represent large values with lower\nprecision and small values with higher precision.\nInspired by the analysis ﬁnding of no consistent superior format, we propose the Mixture of Formats\nQuantization (MoFQ) approach, which selectively determines the optimal format from INT and\nFP with the same bit-width on a layer-wise basis. MoFQ effectively harnesses the complementary\nbeneﬁts of both formats, while ensuring that tensors within the same layer share the same data type\nand all quantized tensors have the same bit-width. A straightforward format selection method proves\neffective, choosing the format with the minimum quantization error based on metrics such as tensor\nMSE, layer output MSE, or model output MSE. MoFQ applies to W-only quantization for memory\nfootprint compression and WA quantization for accelerated inference using lower-bit computation\nunits. For W-only quantization, MoFQ ensures compatibility with a broad range of existing hardware\nand imposes no additional hardware overhead compared to integer-only quantization, as the bit-\nwidth remains unaltered. For W A quantization, MoFQ can be seamlessly integrated with hardware\nsupporting both low-bit INT and FP operations, such as the off-the-shelf H100 GPU and upcoming\nIntel and AMD chips. In summary, this mixed-format approach demonstrates simplicity, effectiveness,\nand efﬁciency in quantization format selection and model performance.\nWhen evaluated on large language models across various tasks, our MoFQ achieves state-of-the-art\n(SOTA) results on both W-only quantization and WA quantization. For W-only quantization with\n4-bit, MoFQ achieves comparable or better accuracy than GPTQ with an order of magnitude faster\nquantization speed, because GPTQ is based on second-order information and our MoFQ adopts\nthe naive linear quantization with round-to-nearest (RTN). For W A quantization with 8-bit, MoFQ\nsigniﬁcantly outperforms INT8-only and FP8-only quantization methods and achieves performance\nclose to the full precision model.\nOur contributions can be summarized as follows:\n1. We conduct an in-depth comparative analysis of INT and FP formats for quantizing LLMs,\noffering valuable insights to guide future quantization designs with low-bit FP formats.\n2\n\n2. We propose the Mixture of Formats Quantization (MoFQ) approach, a simple yet effective\nlayer-wise format selection scheme that seamlessly combines the beneﬁts of both INT and\nFP formats. MoFQ is system and hardware-friendly.\n3. MoFQ achieves state-of-the-art (SOTA) results on both 4-bit W-only quantization and 8-bit\nW A quantization.\n2 Preliminaries\nInteger vs. Floating Point Formats Integer and ﬂoating point formats are two primary ways\nto represent numbers in computing systems. The key distinction between them lies in the value\ndistr"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12357"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12357",
+            "url": "https://arxiv.org/abs/2305.12357",
+            "pdf_url": "https://arxiv.org/pdf/2305.12357.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12357.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12357.txt",
+            "page_count": 22,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12357",
+                "url": "https://arxiv.org/abs/2305.12357",
+                "source": "arxiv.org",
+                "summary": "CoSINT: Designing a Collaborative Capture the Flag\nCompetition to Investigate Misinformation\nSukrit Venkatagiri∗\nsukritv@uw.edu\nCenter for an Informed Public,\nUniversity of Washington\nSeattle, WA, USA\nDepartment of Computer Science,\nVirginia Tech\nArlington, VA, USA\nAnirban Mukhopadhyay\nDepartment of Computer Science,\nVirginia Tech\nBlacksburg, VA, USA\nanirban@vt.edu\nDavid Hicks\nSchool of Education, Virginia Tech\nBlacksburg, VA, USA\nhicks@vt.edu\nAaron Brantly\nDepartment of Political Science,\nVirginia Tech\nBlacksburg, VA, USA\nabrantly@vt.edu\nKurt Luther\nDepartment of Computer Science,\nVirginia Tech\nArlington, VA, USA\nkluther@vt.edu\nABSTRACT\nCrowdsourced investigations shore up democratic institutions by\ndebunking misinformation and uncovering human rights abuses.\nHowever, current crowdsourcing approaches rely on simplistic\ncollaborative or competitive models and lack technological sup-\nport, limiting their collective impact. Prior research has shown that\nblending elements of competition and collaboration can lead to\ngreater performance and creativity, but crowdsourced investiga-\ntions pose unique analytical and ethical challenges. In this paper,\nwe employed a four-month-long Research through Design process\nto design and evaluate a novel interaction style called collabora-\ntive capture the flag competitions (CoCTFs). We instantiated this\ninteraction style through CoSINT, a platform that enables a trained\ncrowd to work with professional investigators to identify and inves-\ntigate social media misinformation. Our mixed-methods evaluation\nshowed that CoSINT leverages the complementary strengths of\ncompetition and collaboration, allowing a crowd to quickly identify\nand debunk misinformation. We also highlight tensions between\ncompetition versus collaboration and discuss implications for the\ndesign of crowdsourced investigations.\nCCS CONCEPTS\n• Human-centered computing → Collaborative and social\ncomputing systems and tools ; Interaction techniques ; Empiri-\ncal studies in HCI .\n∗The majority of this work was completed while the author was at Virginia Tech.\nPermission to make digital or hard copies of part or all of this work for personal or\nclassroom use is granted without fee provided that copies are not made or distributed\nfor profit or commercial advantage and that copies bear this notice and the full citation\non the first page. Copyrights for third-party components of this work must be honored.\nFor all other uses, contact the owner/author(s).\nDIS ’23, July 10–14, 2023, Pittsburgh, PA, USA\n© 2023 Copyright held by the owner/author(s).\nACM ISBN 978-1-4503-9893-0/23/07.\nhttps://doi.org/10.1145/3563657.3595997\nKEYWORDS\ncrowdsourcing, CTF, capture the flag, competition, collaboration,\ncommunitition, design, research through design, misinformation,\nOSINT\nACM Reference Format:\nSukrit Venkatagiri, Anirban Mukhopadhyay, David Hicks, Aaron Brantly,\nand Kurt Luther. 2023. CoSINT: Designing a Collaborative Capture the Flag\nCompetition to Investigate Misinformation. In Designing Interactive Systems\nConference (DIS ’23), July 10–14, 2023, Pittsburgh, PA, USA. ACM, New York,\nNY, USA, 22 pages. https://doi.org/10.1145/3563657.3595997\n1 INTRODUCTION\nVast amounts of publicly available data and powerful software\ntools have fueled the growth of crowdsourced investigations. These\ncrowdsourced investigations have had significant real-world im-\npact, from identifying mis- and disinformation during elections\n[108, 114, 126] to uncovering human rights abuses in war zones\n[42], among other examples [128, 145]. A small but growing sub-\nset of crowdsourced investigations have started to follow an ethos\nof analyzing only publicly available data, known as open source\nintelligence or OSINT [40].\nCrowdsourced OSINT investigations follow two main interac-\ntion approaches: collaborative and competitive [12]. Examples of\ncollaborative crowdsourced investigations include Amnesty Inter-\nnational’s Digital Verification Corps1 and the University of Califor-\nnia, Berkeley’s Human Rights Center Investigations Lab.2 The two\norganizations leverage a crowd of trained university students to col-\nlaboratively authenticate information on war crimes and investigate\nhuman rights abuses [103, 118]. Collaborative crowdsourced inves-\ntigations have also helped to uncover misinformation [4, 64, 94, 114]\nas well as identify suspects involved in crimes [137, 139].\nCompetitive crowdsourced investigations often follow a capture\nthe flag (CTF) model, a gamification concept borrowed from cyber-\nsecurity. In CTF competitions, teams compete against each other\n1https://citizenevidence.org/\n2https://humanrights.berkeley.edu/home/\narXiv:2305.12357v1  [cs.HC]  21 May 2023\n\nDIS ’23, July 10–14, 2023, Pittsburgh, PA, USA Venkatagiri et al.\nto capture digital “flags” and score points to win the game. CTFs\nattract thousands of participants yearly, engaging in millions of\nhours of collective effort [26, 34]. However, most CTFs are designed\nto be theoretical in nature [ 66], with little emphasis on address-\ning real-world problems. For example, Hacktoria’s CTF seeks to\nintroduce users to the investigative field and community of open\nsource intelligence (OSINT) by helping them develop OSINT skills\nin a safe environment using simulated data [ 54]. Unique among\nCTFs, TraceLabs’ Search Party OSINT CTF seeks to address a real-\nlife problem. TraceLabs’ members practice their OSINT skills by\nsearching for information about missing persons, which is then\nsubmitted to law enforcement as tips [30].\nThe HCI and CSCW community has extensively studied collab-\norative [12, 24, 105] and competitive [12, 89, 132, 143] approaches\nfor crowdsourcing complex work, with each having unique ad-\nvantages and disadvantages. Collaborations benefit from increased\ncommunication frequency and a greater sense of group cohesion;\nbut can suffer from overly rigid hierarchies and roles, as well as a\nneed for increased articulation work [121]. Competitions benefit\nby introducing a greater sense of urgency and strongly motivating\nnovices to participate [21, 66, 143], but can suffer from information\nsilos and redundant effort, since each team may perform the same\ntask and not communicate with one another [132].\nResearch on data science contests [131] and innovation contests\n[61] has found benefits to intentionally combining elements of\ncollaboration and competition such as greater performance and\ncreativity. Less work has studied collaboration and competition in\ncrowdsourced OSINT investigations [e.g., 12] or sought to design\nhybrid approaches. Existing hybrid approaches cannot be directly\napplied to crowdsourced investigations because the latter pose dif-\nferent analytical and ethical challenges [44]. Data science contests\nrequire generating better performing models, while innovation\ncontests require designing novel solutions. In contrast, investiga-\ntions require synthesizing existing information into a coherent the-\nory or conclusion [44, 112], with a greater focus on accuracy over\nperformance and novelty. Further, improperly conducted crowd-\nsourced investigations can result in immediate (versus delayed)\nharm to individuals through misidentification and harassment [e.g.,\n25, 76, 90, 102, 137].\nIn this work, we explore how to merge the complementary\nstrengths of competition and collaboration in a new domain: crowd-\nsourced investigations of online misinformation. We employed a\nfour-month-long Research through Design (RtD) process [152] with\n46 university students to design and evaluate a novel interaction\nstyle called collaborative capture the flag competitions (CoCTFs). We\ninstantiated the CoCTF concept through CoSINT, a platform that\nenables a trained crowd to work with professional investigators to\nidentify and investigate social media misinformation.\nTo ameliorate the disadvantages of competition, such as dupli-\ncation of effort and information silos, CoSINT incentivizes infor-\nmation sharing and collaboration between competing teams. To\nreduce the dis"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12358"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12358",
+            "url": "https://arxiv.org/abs/2305.12358",
+            "pdf_url": "https://arxiv.org/pdf/2305.12358.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12358.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12358.txt",
+            "page_count": 41,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12358",
+                "url": "https://arxiv.org/abs/2305.12358",
+                "source": "arxiv.org",
+                "summary": " \n1 \n \nAutoPaint: A Self-Inpainting Method for Unsupervised Anomaly Detection \nMehdi Astaraki1,2,4, Francesca De Benetti3, Yousef Yeganeh3, Iuliana Toma-Dasu2,4, Örjan Smedby1, Chunliang \nWang1, Nassir Navab3,5, Thomas Wendler3,6 \n1 KTH Royal Institute of Technology, Department of Biomedical Engineering and \nHealth Systems, SE-14157 Huddinge, Sweden  \n2 Karolinska Institutet, Department of Oncology-Pathology, SE-17176 Stockholm, \nSweden  \n3 Chair for Computer Aided Medical Procedures and Augmented Reality, Technische \nUniversitat München, Boltzmannstr. 3, 85748 Garching bei München, Germany \n4 Stockholm University, Department of Physics, SE-106 91 Stockholm, Sweden \n5 Chair for Computer Aided Medical Procedures Laboratory for Computational \nSensing and Robotics, Johns-Hopkins University, Baltimore, MD, USA \n6 SurgicEye GmbH, Munich, Germany \nAbstract \nRobust and accurate detection and segmentation of heterogenous tumors appearing in different anatomical organs with \nsupervised methods require large-scale labeled datasets covering all possible types of diseases. Due to the unavailability \nof such rich datasets and the high cost of annotations, unsupervised anomaly detection (UAD) methods have been \ndeveloped aiming to detect the pathologies as deviation from the normality by utilizing the unlabeled healthy image data. \nHowever, developed UAD models are often trained with an incomplete distribution of healthy anatomies and have \ndifficulties in preserving anatomical constraints. This work intends to, first , propose a robust inpainting model to learn \nthe details of healthy anatomies and reconstruct high-resolution images by preserving anatomical constraints. Second, we \npropose an autoinpainting pipeline to automatically detect tumors, replace their appearanc e with the learned healthy \nanatomies, and based on that segment the tumoral volumes in a purely unsupervised fashion. Three imaging datasets, \nincluding PET, CT, and PET -CT scans of lung tumors and head and neck tumors, are studied as benchmarks for \nevaluation. Experimental results demonstrate the significant superiority of the proposed method over a wide range of \nstate-of-the-art UAD methods. Moreover, the unsupervised method we propose produces comparable results to a robust \nsupervised segmentation method when applied to multimodal images. \nKeywords: autoinpainting, unsupervised anomaly segmentation, tumor segmentation \n1. Introduction \nMedical image segmentation refers to the process of partitioning the voxels/pixels of tissues, organs, or pathologies from \nbackground anatomical structures in medical images such as Computed Tomography (CT) or Positron Emission \nTomography (PET). Segmentati on is recognized as one of the most challenging tasks in medical image analysis due to \nthe complexity and variability of human anatomy, the lack of intensity/textural contrast between adjacent tissues, the \nvariability of intensities in medical images , and the presence of noise/artifacts (Hesamian et al., 2019) . As a result, this \nprocess is often done manually by clinical experts, which is not only demanding but also subject to inter/intra -observer \nvariabilities (Fournel et al., 2021) . However, the quant ifications derived from the segmentation step deliver critical \ninformation regarding the characteristics of the segmented regions such as shape, area/volume, and intensity/textural \ndistributions that can be further used for diagnosis, prognosis, and interv entional purposes. In the context of oncological \nimages, the aim of image segmentation is commonly to delineate the boundaries of target tumoral regions (Wadhwa et \nal., 2019) and/or nearby healthy organs (Fu et al., 2021).  \nIn the past three decades, a  variety of computerized methods have been developed to partially automatize and speed \nup the delineation time without compromising the segmentation accuracy. In a broad view, these methods can be \ncategorized as either deep learning (DL) or non-deep learning techniques. In the context of non-deep learning techniques, \na wide range of rule -based methods have been proposed for different segmentation tasks. Region -growing (Thakur and \n\n \n2 \n \nShyam Anand, 2004), watershed (Benson et al., 2015), level-set (Astaraki et al., 2018), Markov random fields (Goubalan \net al., 2016) , graph cut (Chen and Pan, 2018) , atlas -based (Candemir et al., 2016) , and statistical shape modeling \n(Chowdhury et al., 2012) approaches, are only a few examples of rule -based segmentation methods that were employed \nto segment different types of tumors in different organ systems such as liver (e.g., (Siriapisith et al., 2020; Zheng et al., \n2018)), kidney (e.g., (Khalifa et al., 2017; Torres et al., 2018) ), and prostate (e.g., (Delpon et al., 2016; Wong et al., \n2016)). \nSupervised segmentation: Capability and limitations. Thanks to the rapid advances in the DL fields, and in particular, \nconvolutional neural networks (CNNs), a great level of progress has been witnessed in the performance of medical image \nsegmentation tasks. Inspired by the breakthrough of the U -Net model (Ronneberger et al., 2015) , many different DL -\napproaches have been proposed to tackle a variety of segmentation challenges. The novelti es introduced by such models \nare mainly focused on modifications of the network architecture and/or optimization process. In this context, Attention \nU-Net was proposed by integrating the attention gate  (Schlemper et al., 2019)  into the plain U -Net model to guide the \nlearning process more on the target area that successfully improved the segmentation performance of brain tumors (Islam \net al., 2020) and retinal vessels (Zhang et al., 2019) . By replacing convolutional blocks with inception blocks  (Szegedy \net al., 2015), computationally efficient deeper U-Nets were developed to deal with large variations in size and morphology \nwithin the salient regions. The superiority of the segmentation accuracy of such models was reported, e.g., for the \nchallenging t ask of lung nodule detection  (Cheng et al., 2019) . Similarly, Dense U -Net and Residual U -Net were \ndeveloped by using Dense blocks (Huang et al., 2016) and Residual blocks (He et al., 2016), respectively, in the encoder-\ndecoder paths that lead to outstanding segmentation accuracy, e.g., of the prostate (Baldeon-Calisto and Lai-Yuen, 2020) \nand lung cancer (Azad et al., 2019) . More powerful segmentation network families such as U -Net++ (Zhou et al., 2018) , \nAdversarial U-Net (Xue et al., 2018),  and Swin-Unet (Cao et al., 2023)  have been developed and tested on large -scale \ndatasets with remarkable improvement in segmentation performance in different tasks. Finally, nnU-Net (Isensee et al., \n2020) was developed as a self-configuring generic segmen tation pipeline. Although the model architecture follows the \nconventional encoder-decoder structure, by carefully designing the preprocessing steps, hyper parameter tuning, and \noptimization process, they managed to outperform many existing models including highly specialized solutions on 23 \ndifferent biomedical image segmentation challenges. Despite the promising potential of such models, which can achieve \nclinical expert-level accuracies, t hey require a large number of labeled data due to their supervised training fashion. In \nfact, supervised training of such data greedy models suffers from two types of limitations. First, the number of training \nmedical images is often limited because of the costly slice-by-slice data annotation and the lack of large publicly available \ndatasets. Second, even if large -scale training data is available, the generalization power of the learned models is limited \nto the class of data used for training. In fact, the  variety of imaging protocols and infrastructure, as well as biological \ndiversity necessarily requires the collection of annotated data for the particular problem to be tackled  followed by \nretraining of the model to handle these cases of domai"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12359"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12359",
+            "url": "https://arxiv.org/abs/2305.12359",
+            "pdf_url": "https://arxiv.org/pdf/2305.12359.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12359.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12359.txt",
+            "page_count": 24,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12359",
+                "url": "https://arxiv.org/abs/2305.12359",
+                "source": "arxiv.org",
+                "summary": "arXiv:2305.12359v1  [cs.IT]  21 May 2023\n1\nAn Optimal Two-Step Decoding at Receivers\nwith Side Information in PSK-Modulated Index\nCoding\nNavya Saxena, Anjana A. Mahesh, and B. Sundar Rajan\nDepartment of Electrical Communication Engineering, Indi an Institute of\nScience, Bengaluru\nE-mail: {navyasaxena,anjanamahesh,bsrajan}@iisc.ac.i n\nAbstract\nThis paper studies noisy index coding problems over single- input single-output broadcast channels.\nThe codewords from a chosen index code of length N are transmitted after 2N -PSK modulation over an\nAWGN channel. In “Index Coded PSK Modulation for prioritize d Receivers,” [9] the authors showed that\nwhen a length- N index code is transmitted as a 2N -PSK symbol, the ML decoder at a receiver decodes\ndirectly to the message bit rather than following the two-st ep decoding process of ﬁrst demodulating\nthe PSK symbol and equivalently the index-coded bits and the n doing index-decoding. In this paper,\nwe consider unprioritized receivers and follow the two-ste p decoding process at the receivers. After\nestimating the PSK symbol using an ML decoder, at a receiver, there might be more than one decoding\nstrategy, i.e., a linear combination of index-coded bits an d different subsets of side information bits,\nthat can be used to estimate the requested message. Thomas et al. in [“Single Uniprior Index Coding\nWith Min–Max Probability of Error Over Fading Channels,”] [ 7] showed that for binary-modulated\nindex code transmissions, minimizing the number of transmi ssions used to decode a requested message\nis equivalent to minimizing the probability of error. This p aper shows that this is no longer the case\nwhile employing multi-level modulations. Further, we cons ider that the side information available to\neach receiver is also noisy and derive an expression for the p robability that a requested message bit is\nestimated erroneously at a receiver. We also show that the cr iterion for choosing a decoding strategy\nthat gives the best probability of error performance at a rec eiver changes with the signal-to-noise ratio\nat which the side information is broadcast. Hence, for a give n index coding problem and a chosen index\ncode, we give an algorithm to choose the best decoding strate gy at the receivers. The above results are\nshown to be valid over fading channels also.\nIndex T erms\nMay 23, 2023 DRAFT\n\n2\nBroadcast channels, Noisy Index Coding, Side information.\nI. I NTRODUCTION\nThe Index Coding Problem (ICP), introduced in [1], is now a we ll-studied problem in network\ninformation theory which aims to characterize the optimal c ommunication rates and coding\nschemes for broadcasting multiple messages to a system of re ceivers with side information.\nInstances of ICP arise in satellite communications [2], cac he-aided content broadcasting [3],\ncoded computing [4], etc. It consists of a central server tha t has access to a set X of messages,\nbroadcasting to a group of receivers, each of which knows a su bset of the messages in X a\npriori as side information and requests another subset of messages from the server. The solution\nof an ICP , which is a set of server transmissions that satisfy all the receivers, is called an index\ncode, and the number of transmissions in it is called its leng th. If all the transmissions in an\nindex code are linear combinations of the messages in X , then it is called linear. If each coded\ntransmission is formed using a single generation of the mess ages in X , the index code is said\nto be scalar. An optimal index code is one with the minimum pos sible number of transmissions.\nBar-Y ossef et al. [5] studied a particular type of ICP in whic h each receiver demands a single\nunique message, which was represented using a directed grap h called a side information graph.\nIn [5], it was proved that for a given ICP , the length of an opti mal scalar linear index code is\nequal to a graph functional called minrank of the correspond ing side information graph. Ong and\nHo [2] classiﬁed ICPs depending on the nature of demands and s ide information of receivers. If\nthe side information at each receiver is unique, then it is ca lled a uniprior ICP . If the demand of\nevery receiver is unique, then it is called a unicast ICP . Fur ther, in a unicast ICP , if each receiver\ndemands only a single message, it is called a single unicast I CP . General ICPs that are neither\nuniprior nor unicast are termed multicast/multiprior.\nMost of the literature concerning ICPs considers server tra nsmissions over noiseless broadcast\nchannels, while in practice, the transmissions can never be noise-free. Noisy ICPs have been\nstudied in [6]–[9], among others. Multi-level modulations have been used for the transmission\nof index codewords in some of these works. A special case of IC P over AWGN channel with\nquadrature amplitude modulation has been studied in [6]. Ph ase shift keying was the chosen\nmodulation scheme for transmitting index-coded bits over t he AWGN channel in [8] as well as\n[9], which was called index-coded PSK modulation. In these p apers, for a chosen binary index\ncode of length N, the N index-coded bits are mapped to a signal point in 2N - PSK constellation.\nDRAFT May 23, 2023\n\n3\nThere might be situations in which the server gives higher pr iority to some of the receivers,\nwhich may be based on the premium paid. Such a prioritized rec eiver system is considered in\n[9], [14]. The techniques used in these papers are aimed at gi ving the best probability of error\nperformance of the highest priority receiver, but this migh t lead to the performance of lower\npriority receivers deteriorating considerably. However, there might also be cases where the server\ndoes not prioritize any of the receivers. For instance, a ser vice provider (say, a television channel)\nmay serve all its users equally as all have paid equal money. I n this work, we consider noisy\nindex coding problems with unprioritized receivers over AW GN broadcast channels.\nIn the ﬁrst half of this paper, we assume that the side informa tion available to the receivers and\nnoise-free, whereas, in the second half, we assume that the s ide information at the receivers is\nobtained from binary modulated broadcast transmissions by the server, maybe, during an earlier\noff-peak window, and hence are noisy. Due to differences in r eceiver sensitivities or detection\nthresholds, different subsets of the messages might not be d ecoded, i.e., get erased, at different\nreceivers resulting in non-identical subsets of the messag e set X as side information at different\nreceivers.\nDecoding a requested message at a receiver involves the two- step process of ﬁrst performing\nML decoding to estimate the transmitted PSK symbol, and henc e the index-coded bits, and then\ndecoding the requested message bit by using some linear comb ination of the estimated index-\ncoded bits and its side information. At any receiver, there m ight be several linear combinations\nof the index-coded bits, which, along with its side informat ion, could be used for decoding\na particular requested message, which we call possible deco ding strategies at that receiver.\nFor binary-modulated transmissions, it was shown in [7] tha t the best decoding strategy w.r.t\nprobability of error is a linear combination of the minimum n umber of index-coded bits. In this\npaper, we show that when the index code is transmitted using m ulti-level modulation, minimizing\nthe number of index-coded bits used in index-decoding post m aximum-likelihood (ML) decoding\nof the PSK symbol need not result in the best probability of er ror performance at the receivers.\nFor M-PSK modulated transmission of index codes over an AWGN chan nel, at a receiver\nwhich performs the two-step decoding process as described a bove, we derive a criterion for\nselecting a decoding strategy that results in the best proba bility of error performance. There\nmight be other two-step decoding processes, that use a non-M L decoder for estimation of PSK\nsymbol and a different dec"
+              }
+            ]
+          }
+        },
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "2305.12360"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2305.12360",
+            "url": "https://arxiv.org/abs/2305.12360",
+            "pdf_url": "https://arxiv.org/pdf/2305.12360.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12360.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2305.12360.txt",
+            "page_count": 20,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2305.12360",
+                "url": "https://arxiv.org/abs/2305.12360",
+                "source": "arxiv.org",
+                "summary": "arXiv:2305.12360v1  [math.CO]  21 May 2023\nExtensions of the Colorful Helly Theorem for\nd-collapsible and d-Leray complexes\nMinki Kim ∗ 1 and Alan Lew † 2\n1Division of Liberal Arts and Sciences, Gwangju Institute of Science\nand Technology (GIST), Gwangju, Republic of Korea\n2Dept. Math. Sciences, Carnegie Mellon University, Pittsburgh, PA\n15213, USA\nAbstract\nWe present extensions of the Colorful Helly Theorem for d-collapsible\nand d-Leray complexes, providing a common generalization to the ma-\ntroidal versions of the theorem due to Kalai and Meshulam, the “ve ry\ncolorful” Helly theorem introduced by Arocha, B´ ar´ any, Bracho, Fa-\nbila and Montejano, and the “semi-intersecting” colorful Helly theo rem\nproved by Montejano and Karasev.\nAs an application, we obtain the following extension of Tverberg’s\nTheorem: Let A be a ﬁnite set of points in Rd with |A| > (r −1)(d+1).\nThen, there exist a partition A1, . . . , Ar of A and a subset B ⊂ A of\nsize ( r − 1)(d + 1), such that ∩r\ni=1 conv((B ∪ {p}) ∩ Ai) ̸= ∅ for all\np ∈ A \\ B. That is, we obtain a partition of A into r parts that\nremains a Tverberg partition even after removing all but one arbitr ary\npoint from A \\ B.\n1 Introduction\nLet F be a family of (not necessarily distinct) sets, colored with r colors.\nFormally, we have a partition F = F1 ∪ · · · ∪ F r. We call the subfamilies\nFi the color classes of F. We say that a subfamily F ′ ⊂ F is colorful if it\ncontains at least one set from each color class. We say that F ′ is intersecting\nif ∩F ∈F ′F ̸= ∅. The Colorful Helly Theorem, observed by Lov´ asz, asserts\nthe following:\n∗ minkikim@gist.ac.kr. Minki Kim was supported by the Basic S cience Research Pro-\ngram through the National Research Foundation of Korea (NRF ) funded by the Ministry\nof Education (NRF-2022R1F1A1063424)\n† alanlew@andrew.cmu.edu.\n1\n\nTheorem 1.1 (Lov´ asz’s Colorful Helly Theorem (see [4])). Let C be a ﬁnite\nfamily of convex sets in Rd colored with d+1 colors. If all colorful subfamilies\nof F of size d+1 are intersecting, then one of the color classes is intersect ing.\nMany combinatorial properties of families of convex sets, a nd in partic-\nular Helly-type results like Theorem 1.1, can be described i n terms of the\nnerve of the family. Given a ﬁnite family F of sets, the nerve of F is the sim-\nplicial complex on vertex set F whose simplices are the subfamilies F ′ ⊂ F\nthat are intersecting. We say that a simplicial complex X is d-representable\nif it is isomorphic to the nerve of some family of convex sets i n Rd.\nTwo related notions are those of d-collapsibility and d-Lerayness, intro-\nduced by Wegner in [24]. Let X be a simplicial complex. A simplex σ ∈ X is\ncalled a free face of X if σ is contained in a unique maximal face τ (possibly\nequal to σ) of X. Given a free face σ of size at most d in X, an elementary\nd-collapse is the operation of removing from X all the simplices containing\nσ (and contained in τ ). We say that X is d-collapsible if there is a sequence\nof elementary d-collapses reducing X to the void complex ∅. A simplicial\ncomplex X is called d-Leray if all induced subcomplexes of X, including X\nitself, have trivial homology groups in dimensions d and higher.\nWegner showed in [24] that every d-representable complex is d-collapsible,\nand that every d-collapsible complex is d-Leray. Many interesting results\nabout the intersection patterns of a family of convex sets ca n be obtained\nfrom the fact that the nerve of such a family is d-collapsible (or d-Leray). For\nexample, in [9], Kalai and Meshulam proved the following gen eralizations of\nTheorem 1.1.\nTheorem 1.2 ([9, Theorem 2.1]) . Let X be a d-collapsible simplicial com-\nplex on vertex set V , and let M be a matroid on V of rank r, with rank\nfunction ρ, such that M ⊂ X. Then, there is some τ ∈ X such that ρ(τ ) = r\nand ρ(V \\ τ ) ≤ d.\nTheorem 1.3 ([9, Theorem 1.6]) . Let X be a d-Leray simplicial complex\non vertex set V , and let M be a matroid on V of rank r, with rank function\nρ, such that M ⊂ X. Then, there is some τ ∈ X such that ρ(V \\ τ ) ≤ d.\nTheorem 1.1 can be deduced from either Theorem 1.2 or 1.3 by ta king\nX to be the nerve of the family of convex sets, and M to be a “partition\nmatroid” corresponding to the coloring of the family (see Se ction 6 for more\ndetails).\nGeneralizations of Theorem 1.1 in a diﬀerent direction were p resented\nby Arocha et al. in [3] and by Montejano and Karasev in [13].\nTheorem 1.4 (Very Colorful Helly Theorem [3, Theorem 10]) . Let 1 ≤ k ≤\nd + 1, and let C be a ﬁnite family of convex sets in Rd colored with d + 1\ncolors. If every subfamily C′ ⊂ C of size d + 1 having at least k diﬀerent\ncolors is intersecting, then there are d + 2 − k color classes whose union is\nintersecting.\n2\n\nTheorem 1.5 (“Semi-intersecting” Colorful Helly Theorem [13, Lemma 2] ).\nLet C be ﬁnite family of convex sets in Rd colored with d + 2 colors. If every\ncolorful subfamily of size d + 2 has at most one non-intersecting subfamily\nof size d + 1, then one of the color classes is intersecting.\nOur main results consist of the following common generaliza tions of The-\norem 1.4, Theorem 1.5 and Theorem 1.2 (Theorem 1.3 respectiv ely).\nTheorem 1.6. Let d ≥ 1, r ≥ d+ 1, 1 ≤ m ≤ r and m ≤ k ≤ min{m + d, r}\nbe integers. Let V be a ﬁnite set with |V | ≥ max{m + d, r}. Let X be a\nd-collapsible simplicial complex on vertex set V , and let M be a matroid of\nrank r on vertex set V with rank function ρ.\nAssume that for every U = {u1, . . . , ud, v1, . . . , vm} ⊂ V with ρ(U ) ≥ k,\nthere is some i ∈ [m] such that {u1, . . . , ud, vi} ∈ X. Then, there is some\nτ ∈ X such that ρ(τ ) ≥ r + 1 − m and ρ(V \\ τ ) ≤ k − 1.\nUnder the weaker assumption of d-Lerayness, we obtain a weaker con-\nclusion:\nTheorem 1.7. Let d ≥ 1, r ≥ d+ 1, 1 ≤ m ≤ r and m ≤ k ≤ min{m + d, r}\nbe integers. Let V be a ﬁnite set with |V | ≥ max{m + d, r}. Let X be a\nd-Leray simplicial complex on vertex set V , and let M be a matroid of rank\nr on vertex set V with rank function ρ.\nAssume that for every U = {u1, . . . , ud+1, v1, . . . , vm−1} ⊂ V with ρ(U ) ≥\nk, either {u1, . . . , ud+1} ∈ X or there exists j ∈ [m − 1] such that σ ∪ {vj} ∈\nX for every σ ⊊ {u1, . . . , ud+1}. Then, there is some τ ∈ X such that\nρ(V \\ τ ) ≤ k − 1.\nRemark. Note that the condition in Theorem 1.6 is implied by the condi -\ntion in Theorem 1.7, and that both conditions are implied by t he following\nstronger (but perhaps more natural) condition: “For every s ubset U of V of\nsize d+ m with ρ(U ) ≥ k, all but possibly at most m − 1 of the the subsets of\nU of size d + 1 are simplices in X”. Moreover, note that all three conditions\nare equivalent for m ≤ 2.\nAs an immediate consequence of Theorem 1.6, we obtain the fol lowing:\nTheorem 1.8. Let d ≥ 1, r ≥ d+1, 1 ≤ m ≤ r and m ≤ k ≤ min{m+d, r}.\nLet C be a ﬁnite family of convex sets in Rd, colored with r diﬀer-\nent colors, of size |C| ≥ max{m + d, r}. Assume that for every family\n{A1, . . . , Ad, B1, . . . , Bm} ⊂ C , colored with at least k diﬀerent colors, at\nleast one of the subfamilies of the form {A1, . . . , Ad, Bi}, for i ∈ [m], is in-\ntersecting. Then, there are r−k+1 color classes whose union is intersecting.\nIn the special case m = 1 and r = d + 1, we recover Theorem 1.4. For\nm = 2 and r = k = d + 2, we recover Theorem 1.5.\n3\n\nAs an application of Theorem 1.8, we obtain the following ext ension of\nTverberg’s Theorem [23].\nLet A ⊂ Rd be a ﬁnite set of points, and let A = A1 ∪ . . . ∪ Ar be\na partition of A. We say that A1, . . . , Ar is a Tverberg partition of A if\n∩r\ni=1 conv(Ai) ̸= ∅. Let B ⊂ A. We say that B ⊊ A is a Tverberg center for\nthe partition A = A1 ∪ · · · ∪ Ar if, for every p ∈ A \\ B,\nr⋂\ni=1\nconv ((B ∪ {p}) ∩ Ai) ̸= ∅.\nIn other words, B is a Tverberg center for A = A1 ∪ . . . ∪ Ar if, for every\np ∈ A \\ B, the partition of B ∪ {p} induced by A1, . . . , Ar is a Tverberg\npartition.\nTheorem 1.9. Let d ≥ 1, r ≥ 2, and let n = ( r − 1)(d + 1). Let A ⊂ Rd\nbe a ﬁnite set of points of size larger than n. Then, there exists a partition\n"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "M02_carryover_timeframe",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_carryover",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: chỉ xử lý latest turn, carry timeframe=day và topic=news, query robotics."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tin AI hôm nay có gì?"
+        },
+        {
+          "role": "user",
+          "content": "Còn về robotics thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ tìm robotics thôi, vẫn là tin hôm nay"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "https://arxiv.org/abs/2406.12345"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "missing tool call lookup",
+          "extra tool call paper_text"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "paper_text",
+          "args": {
+            "arxiv_url": "https://arxiv.org/abs/2406.12345"
+          },
+          "result": {
+            "tool": "get_arxiv_paper_text",
+            "arxiv_id": "2406.12345",
+            "url": "https://arxiv.org/abs/2406.12345",
+            "pdf_url": "https://arxiv.org/pdf/2406.12345.pdf",
+            "pdf_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2406.12345.pdf",
+            "txt_path": "/Users/tranthanh/Documents/Projects/DAY04_2A202601217_NguyenVanDai/starter_v0/arxiv_papers/2406.12345.txt",
+            "page_count": 25,
+            "pages_read": 5,
+            "chars_returned": 8000,
+            "items": [
+              {
+                "title": "arXiv paper 2406.12345",
+                "url": "https://arxiv.org/abs/2406.12345",
+                "source": "arxiv.org",
+                "summary": "1  \n  Navigating Knowledge Management Implementation Success in Government Organizations:  A type-2 fuzzy approach    Saman Foroutani Department of Management and Information Systems, Safashahr Branch, Islamic Azad University, Safashahr, Iran. Email: saman1361@gmail.com Nasim Fahimian Head of Modular Design, Hamburg, Germany. Email: n.fahimian@gmail.com Reyhaneh Jalalinejad  Department of Economics and Management, University of Padova, Padova, Italy. Email: reyhane.jalalinejad@gmail.com Morteza Hezarkhani Department of Economics and Management, University of Padova, Padova, Italy. Email: moripm.hezar@gmail.com Samaneh Mahmoudi Department of management  University of Basir, Qazvin, Iran Email: samanehmahmoudi1991@gmail.com Behrooz Gharleghi School of Digital Finance, Arden University Berlin, Germany. Email: gharleghi.bn@gmail.com    Abstract Optimal information and knowledge management is crucial for organizations to achieve their objectives efficiently. As a rare and valuable resource, effective knowledge management provides a strategic advantage and has become a key determinant of organizational success. The study aims to identify critical success and failure factors for implementing knowledge management systems in government organizations. This research employs a descriptive survey methodology, collecting data through random interviews and questionnaires. The study highlights the critical success factors for knowledge management systems in government organizations, including cooperation, an open atmosphere, staff training, creativity and innovation, removal of organizational constraints, reward policies, role modeling, and focus. Conversely, failure to consider formality, staff participation, collaboration technologies, network and hardware infrastructure, complexity, IT staff, and trust can pose significant obstacles to successful implementation. Keywords: Knowledge Management, Risk Assessment, Fuzzy Map, Type 2 Fuzzy Numbers, Government Organizations.  \n\n2  \n 1. Introduction:          Knowledge is widely recognized as a crucial economic resource and may even be the sole source of competitive advantage for organizations (Drucker, 2009; Levinson & Drucker, 1996). Due to the difficulty in creating, transferring, and replicating knowledge, it holds a strategic position in comparison to other competitive resources within organizations (Ahn & Chang, 2004; Dehkordy et la., 2013; Shamsaddini et al., 2015). Nonaka and Takuchi (1995) distinguish between two types of knowledge in organizations: tacit knowledge, which exists in the form of attitudes, ideas, experiences, and organizational culture, and explicit knowledge, which is found in instructions, regulations, and scientific formulas. They argue that both types of knowledge are transferable (Crossan, 1996; Nonaka & Takeuchi, 1995). Davenport and Prusak (1998) argue that the use of knowledge in organizations can be measured and evaluated, and that organizations require an ongoing tool for assessing the effectiveness and efficiency of their knowledge processes in order to improve their performance. As employees' knowledge or intellectual capital is a vital asset that distinguishes organizations from their competitors, managers must understand how to effectively manage the organization's knowledge (Chung et al., 2016; Forcadell & Guadamillas, 2002; Liebowitz & Suen, 2000; Supyuenyong & Swierczek, 2013; Chen et al., 2021; Hashemzadeh et al., 2011; Gheitarani et al., 2022), and use their intellectual capacities to improve organizational performance. Effective implementation of knowledge management requires attention to key factors that impact the success of system implementation, such as infrastructure (Bakar et al., 2015; Kasemsap, 2015; Gong et al., 2021; Amaravadi, 2005; Pakuhinezhad et al., 2023b). As organizations increasingly recognize the importance of knowledge management, many seek to establish a knowledge management system to facilitate and utilize knowledge management activities. To implement and develop such systems successfully, it is crucial to address the issues, challenges, and factors that impact their success in today's business environment (Ngai & Chan, 2005; Maditinos et al., 2011). Iranian government organizations face unique knowledge management challenges due to cultural and organizational barriers, limited technological infrastructure, knowledge silos and lack of integration, and knowledge retention and succession planning issues. These challenges hinder effective implementation of knowledge management systems. This paper aims to address the following research questions: 1. What are the specific knowledge management challenges faced by government organizations? 2. How do these challenges impact the successful implementation of knowledge management systems within these organizations? 3. What are the key factors that influence the effectiveness of knowledge management systems in the context of Iranian government organizations? 4. How can the type-2 fuzzy map methodology be utilized to identify and analyze these factors? 5. What insights and recommendations can be derived from the empirical investigation to enhance the implementation and utilization of knowledge management systems in Iranian government organizations?  Accordingly, this study aims to utilize the type-2 of fuzzy map to identify the factors that affect the successful implementation of knowledge management systems in government organizations in southeast part cities of Iran.  2. Literature Review 2.1. Knowledge management \n\n3  \nIn the past decade, attitudes towards organizational resources have undergone a significant shift, possibly due to advances in information technology. Knowledge is now considered a primary resource for creating value and gaining a competitive advantage in the business environment. This shift has led to a greater emphasis on explicit knowledge and a reduced focus on tacit knowledge held by employees and their ability to create knowledge (Liebowitz & Suen, 2000; Nazari et al., 2016). Knowledge management is a process by which an organization can generate wealth and create value from intellectual assets based on its knowledge and intellectual capital (Nonaka & Takeuchi, 1995), due to the rapid and dynamic changes in the organizational environment, managers have realized that information and knowledge is a valuable resource that must be managed because it is very effective in meeting organizational goals (Jalali & Sardari, 2015; Shajera & Al-Bastaki, 2013). Knowledge management has a significant impact on increasing the efficiency and effectiveness of business activities and in other words helps organizations to transfer knowledge and experience to gain a competitive advantage. (Chinying Lang, 2001; Shajera & Al-Bastaki, 2013; Supyuenyong & Swierczek, 2013; Pakuhinezhad, 2023b). So far, various definitions of knowledge management have been presented, which can be generally said: knowledge management is defined as acquiring the knowledge of employees and knowledge outside the organization and using it for further growth and development of the organization (Lee & Choi, 2003; Liebowitz & Frank, 2016; Hakkak et al., 2016). The following are some definitions of knowledge management as expressed by experts: Davenport and Prasack (1998) believe that knowledge management is the exploitation and development of an organization's knowledge capital to advance the goals of the organization. And knowledge that is managed includes both tacit and explicit knowledge (Anand et al., 2002; Takalo et al., 2013). Mike Borg Knowledge knows, and knowledge management helps individuals communicate with each other and share their knowledge (Sabherwal & Becerra - Fernandez, 2003; Nawaser et al., 2015; Yaghoubi et al., 2011). It flows down the lines of the organization and is rarely available at the right time, but in knowledge-based organizations, knowledge flows throughout the organization and is used by everyone in need (Burk, 1"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "M03_correction_handle",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_correction",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: map tên thường, sửa Sam Altman→Andrej Karpathy, dùng handle karpathy và limit=3."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tweet mới nhất của Sam Altman"
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, của Andrej Karpathy"
+        },
+        {
+          "role": "user",
+          "content": "Lấy 3 tweet mới nhất nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://api.twitter.com/2/users/by/username/karpathy"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "missing tool call timeline",
+          "extra tool call fetch"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://api.twitter.com/2/users/by/username/karpathy"
+          },
+          "result": {
+            "tool": "read_url",
+            "error": "RuntimeError",
+            "message": "Missing FIRECRAWL_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "M04_clarify_then_url",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_clarify_url",
+        "difficulty": "medium",
+        "what_it_tests": "3 turns: sau khi được cung cấp URL, latest turn xác nhận chỉ đọc link đó → read_url đúng url."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tóm tắt bài này hộ mình"
+        },
+        {
+          "role": "user",
+          "content": "https://anthropic.com/news/claude"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ đọc đúng link đó thôi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://anthropic.com/news/claude"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://anthropic.com/news/claude"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://anthropic.com/news/claude"
+          },
+          "result": {
+            "tool": "read_url",
+            "error": "RuntimeError",
+            "message": "Missing FIRECRAWL_API_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "M05_correction_limit",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_arg_correction",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: map tên Elon Musk, carry handle elonmusk, sửa limit 10→3."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Lấy 10 tweet mới nhất của Elon Musk"
+        },
+        {
+          "role": "user",
+          "content": "Cho mình 3 thôi"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn của Elon Musk nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có thể cung cấp tên người dùng Twitter cụ thể của Elon Musk (ví dụ: @elonmusk) để tôi có thể lấy 3 tweet mới nhất cho bạn không?"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "missing tool call timeline",
+          "extra tool call clarify"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có thể cung cấp tên người dùng Twitter cụ thể của Elon Musk (ví dụ: @elonmusk) để tôi có thể lấy 3 tweet mới nhất cho bạn không?"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có thể cung cấp tên người dùng Twitter cụ thể của Elon Musk (ví dụ: @elonmusk) để tôi có thể lấy 3 tweet mới nhất cho bạn không?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "M06_switch_tool",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_switch_tool",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: explicitly bỏ Twitter, chuyển sang web_search news, giữ chủ đề OpenAI."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mọi người nói gì về OpenAI trên Twitter?"
+        },
+        {
+          "role": "user",
+          "content": "Bỏ Twitter, chuyển sang tìm trên web tin tức đi"
+        },
+        {
+          "role": "user",
+          "content": "Giữ chủ đề OpenAI"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "wiki_summary",
+            "args": {
+              "query": "OpenAI news"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "missing tool call lookup",
+          "extra tool call wiki_summary"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "wiki_summary",
+          "args": {
+            "query": "OpenAI news"
+          },
+          "result": {
+            "tool": "get_wiki_summary",
+            "error": "HTTPError",
+            "message": "404 Client Error: Not Found for url: https://en.wikipedia.org/api/rest_v1/page/summary/OpenAI%20news"
+          }
+        }
+      ]
+    }
+  ]
+}

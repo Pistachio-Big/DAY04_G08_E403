@@ -77,6 +77,16 @@ tools:
         headline: {type: string, default: "", description: "Tiêu đề"}
       required: [items, template]
 
+  # ---------------- Team new tools ----------------
+  - name: wiki_summary
+    description: "Lấy định nghĩa/tóm tắt bách khoa nhanh về một khái niệm, người, hay thực thể từ Wikipedia. Dùng cho câu hỏi kiểu 'X là gì/ai'. KHÔNG dùng cho tin tức mới nhất (dùng lookup), một URL cụ thể người dùng đưa (dùng fetch), hoặc bài đăng mạng xã hội (dùng timeline/social_search)."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Tên khái niệm/thực thể cần tra, ví dụ 'Transformer (deep learning)'"}
+        lang: {type: string, enum: [vi, en], default: "vi", description: "Ngôn ngữ bài Wikipedia; tự động fallback sang en nếu bản vi không tồn tại"}
+      required: [query]
+
   # ---------------- Bonus tools ----------------
   - name: send
     description: "Gửi một đoạn văn bản đi."
