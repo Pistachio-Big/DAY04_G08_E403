@@ -1,0 +1,526 @@
+{
+  "run_id": "v3_B_group_openrouter_20260729T114335514215",
+  "version": "v3",
+  "artifact_version": "v3+p77269b3ff475+tecfac0ba0e92",
+  "prompt_hash": "77269b3ff475c44bf6c510f66ed70721e69fbfa2737858a91ee8dd4b970bcc54",
+  "tools_hash": "ecfac0ba0e921fe9ab9ee4af918b0807998c19f54e1a2d799aebd0c908baa676",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Vscode_projects\\Lab\\DAY04_G08_E403\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Vscode_projects\\Lab\\DAY04_G08_E403\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Team eval: 10 case do nhóm tự thiết kế. 5 single-turn + 5 multi-turn. Kiểm tra routing, argument extraction, boundary, scope, và context tracking.",
+  "generated_at": "2026-07-29T11:43:35",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 1,
+    "provider_error_cases": 9,
+    "passed_cases": 1,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": null,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_papers_routing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_papers_with_args",
+        "difficulty": "medium",
+        "what_it_tests": "Yêu cầu tìm paper → papers tool, trích đúng max_results=3 và sort_by=lastUpdatedDate từ 'mới nhất'."
+      },
+      "input": "Tìm 3 paper mới nhất về large language model alignment",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "large language model alignment",
+              "max_results": 3,
+              "sort_by": "lastUpdatedDate"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "large language model alignment",
+              "max_results": 3,
+              "sort_by": "lastUpdatedDate"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "papers",
+          "args": {
+            "query": "large language model alignment",
+            "max_results": 3,
+            "sort_by": "lastUpdatedDate"
+          },
+          "result": {
+            "tool": "arxiv_search",
+            "query": "large language model alignment",
+            "api_query": "all:large AND all:language AND all:model AND all:alignment",
+            "total_results": 15772,
+            "items": [
+              {
+                "arxiv_id": "2607.24515v2",
+                "title": "Systematic Analysis of Large Language Models and Transformer-Based Machine Translation for English-Tamil and Tamil-English Across Diverse Datasets",
+                "summary": "The challenge of Machine Translation for low resource languages such as Tamil is primarily caused by the restricted amount of parallel data for these languages, as well as their substantial amount of domain variation and morphological complexity. This research presents the comprehensive evaluation of the performance of several multilingual translation models on English-Tamil and Tamil-English translations across multiple datasets: NTREX, EnTamV2, WikiMatrix and PMIndia. This study evaluates supervised NMT systems, NLLB and mBART, using both the BLEU and chrF metric, and examines how these systems perform on data of different quality levels and domains. This performs an attention-based analysis to increase model interpretability by visualising the alignments of tokens in an English source text and their Tamil translations and vice-versa to provide insight into how they make translations. This study also demonstrates that using in-context prompting can provide an excellent way to perform a few-shot translation of English to Tamil and Tamil-English using a Tamil capable TamilLaMA model, and compare this to supervised approaches qualitatively. These findings show that the quality of the datasets and their alignment with the domain will greatly affect the performance of the model, that attention-based mechanisms can aid in explain ability, and that few-shot large language models can still produce structurally coherent translations of Tamil.",
+                "authors": [
+                  "Sriharshaa S",
+                  "Sangeetha Sivanesan",
+                  "Jaya Nirmala S"
+                ],
+                "published": "2026-07-27T14:54:01Z",
+                "updated": "2026-07-28T17:28:27Z",
+                "url": "http://arxiv.org/abs/2607.24515v2",
+                "pdf_url": "https://arxiv.org/pdf/2607.24515v2",
+                "source": "arxiv.org",
+                "primary_category": "cs.CL",
+                "categories": [
+                  "cs.CL"
+                ]
+              },
+              {
+                "arxiv_id": "2607.25961v1",
+                "title": "Knowledge-Guided Multimodal Reasoning over Interacting Streams for Video-Level Ambivalence and Hesitancy Recognition",
+                "summary": "Ambivalence and hesitancy (A/H) are conflicting affective states that precede the delay or abandonment of health behaviour change. Recognition of A/H at the video level is difficult, since the signal arises from disagreement across and within facial, vocal, linguistic, and bodily modalities, and manifests differently across individuals. The proposed PRISM-AH (Predictive Reasoning over Interacting Streams for Multimodal Ambivalence/Hesitancy Recognition), is a framework that treats A/H as a multimodal conflict that unfolds over time. Frozen vision, audio, and text encoders are aligned into short time windows and passed to a lightweight streaming model that scores cross-modal dissonance, predicts each next window to expose a hesitation surprise signal, discovers behaviour prototypes, and is conditioned on participant metadata. Dense window-level annotations supervise the model as an auxiliary objective, and the decision threshold is calibrated for macro F1. A knowledge-guided large language model then reasons over structured evidence using the expert cue taxonomy of the dataset, and its verdict is fused late only when validation performance improves. On the labelled public test partition of 525 videos, PRISM-AH attains a macro F1 of 0.6133, compared to the reported zero-shot baseline of 0.2827. The reasoning gain is validated to transfer from validation to the larger test partition.",
+                "authors": [
+                  "Podakanti Satyajith Chary",
+                  "Barath Parthiban",
+                  "Pranesh Velmurugan",
+                  "Adeeba Khan",
+                  "Nagarajan Ganapathy"
+                ],
+                "published": "2026-07-28T16:44:38Z",
+                "updated": "2026-07-28T16:44:38Z",
+                "url": "http://arxiv.org/abs/2607.25961v1",
+                "pdf_url": "https://arxiv.org/pdf/2607.25961v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.CV",
+                "categories": [
+                  "cs.CV",
+                  "cs.AI"
+                ]
+              },
+              {
+                "arxiv_id": "2607.25947v1",
+                "title": "A Cost-Effective Multimodal LLM Reasoning Framework for Question Answering over Irregular Clinical Time Series",
+                "summary": "Question answering (QA) over irregular clinical time series (ICTS) plays a pivotal role in a wide range of healthcare applications. Although recent multimodal time-series large language models (LLMs) have shown considerable promise in general-purpose time-series QA, they remain poorly equipped to model the sparsity, asynchrony, and irregular sampling patterns of clinical observations. To fill this gap, we propose ClinPRISM, a cost-effective multimodal LLM reasoning framework for question answering over ICTS data. First, we devise an irregularity-aware multi-scale encoder to capture sparse clinical evidence at diverse temporal scales. Then, we propose a temporal evidence distiller to integrate representations across these scales and compress them into a small number of LLM-compatible tokens. Moreover, we introduce a progressive alignment strategy that sequentially aligns the irregular trajectories with the LLM's textual embedding space. To facilitate training, we construct 30,000 clinical time series paired with multi-scale descriptions, together with 41,000 instruction-tuning instances spanning 11 tasks. Using a 4-billion-parameter LLM backbone, ClinPRISM achieves state-of-the-art performance on the held-out evaluation benchmark while using only 16 time-series tokens and achieving an average inference latency of 0.15 seconds per question.",
+                "authors": [
+                  "Frank Nie",
+                  "Ethan B Liu",
+                  "Yuan Zhu",
+                  "Wei Fan",
+                  "Jindong Han"
+                ],
+                "published": "2026-07-28T16:33:41Z",
+                "updated": "2026-07-28T16:33:41Z",
+                "url": "http://arxiv.org/abs/2607.25947v1",
+                "pdf_url": "https://arxiv.org/pdf/2607.25947v1",
+                "source": "arxiv.org",
+                "primary_category": "cs.AI",
+                "categories": [
+                  "cs.AI",
+                  "cs.CL"
+                ]
+              }
+            ],
+            "rate_limit_note": "arXiv may return 429 if called too frequently; this tool waits at least 3 seconds between requests in-process."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_policy_routing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_policy_area",
+        "difficulty": "medium",
+        "what_it_tests": "Hỏi chính sách nội bộ → policy tool, trích đúng policy_area='source_citation' từ 'trích dẫn nguồn'."
+      },
+      "input": "Chính sách của công ty về việc trích dẫn nguồn trong bài viết AI là gì?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "policy",
+            "args": {
+              "policy_area": "source_citation"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "APIStatusError: Error code: 402 - {'error': {'message': 'This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 16298. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account', 'code': 402, 'metadata': {'limit_source': 'openrouter_credits', 'remedy_hint': 'Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.', 'provider_name': None}}, 'user_id': 'user_3GvoxJBTbqfAZz02URqrIXltY78'}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G03_out_of_scope_math",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "scope_boundary_math",
+        "difficulty": "easy",
+        "what_it_tests": "Giải toán không phải research → không gọi tool, trả lời ngoài phạm vi."
+      },
+      "input": "Giải phương trình x^2 + 3x - 10 = 0 giúp mình",
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "APIStatusError: Error code: 402 - {'error': {'message': 'This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 16298. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account', 'code': 402, 'metadata': {'limit_source': 'openrouter_credits', 'remedy_hint': 'Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.', 'provider_name': None}}, 'user_id': 'user_3GvoxJBTbqfAZz02URqrIXltY78'}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G04_fetch_with_exact_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_fetch_url_exact",
+        "difficulty": "easy",
+        "what_it_tests": "Có URL cụ thể → dùng fetch, copy URL nguyên văn, không dùng lookup hay papers."
+      },
+      "input": "Đọc và tóm tắt nội dung trang https://arxiv.org/abs/2305.18290",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://arxiv.org/abs/2305.18290"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "APIStatusError: Error code: 402 - {'error': {'message': 'This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 16298. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account', 'code': 402, 'metadata': {'limit_source': 'openrouter_credits', 'remedy_hint': 'Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.', 'provider_name': None}}, 'user_id': 'user_3GvoxJBTbqfAZz02URqrIXltY78'}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G05_missing_query_for_social",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_search_query",
+        "difficulty": "medium",
+        "what_it_tests": "Thiếu từ khóa/chủ đề tìm kiếm → hỏi lại bằng clarify(response_type='text'), không tự đoán."
+      },
+      "input": "Tìm tweet giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "APIStatusError: Error code: 402 - {'error': {'message': 'This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 16298. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account', 'code': 402, 'metadata': {'limit_source': 'openrouter_credits', 'remedy_hint': 'Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.', 'provider_name': None}}, 'user_id': 'user_3GvoxJBTbqfAZz02URqrIXltY78'}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G06_multi_correction_sort",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_correction_sort_order",
+        "difficulty": "medium",
+        "what_it_tests": "Multi-turn: user chỉnh sort_by từ default sang lastUpdatedDate, agent phải giữ nguyên query cũ và chỉ đổi sort."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm paper về reinforcement learning from human feedback"
+        },
+        {
+          "role": "user",
+          "content": "Sắp xếp theo ngày mới nhất thay vì relevance"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "reinforcement learning from human feedback",
+              "sort_by": "lastUpdatedDate"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "APIStatusError: Error code: 402 - {'error': {'message': 'This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 16298. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account', 'code': 402, 'metadata': {'limit_source': 'openrouter_credits', 'remedy_hint': 'Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.', 'provider_name': None}}, 'user_id': 'user_3GvoxJBTbqfAZz02URqrIXltY78'}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G07_multi_send_after_search",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_send_confirmation",
+        "difficulty": "hard",
+        "what_it_tests": "Multi-turn: sau khi tìm xong, user muốn gửi → phải clarify(yes_no) trước, không gọi send trực tiếp."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tin AI hôm nay"
+        },
+        {
+          "role": "user",
+          "content": "Gửi kết quả này lên Telegram"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "APIStatusError: Error code: 402 - {'error': {'message': 'This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 16298. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account', 'code': 402, 'metadata': {'limit_source': 'openrouter_credits', 'remedy_hint': 'Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.', 'provider_name': None}}, 'user_id': 'user_3GvoxJBTbqfAZz02URqrIXltY78'}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G08_multi_switch_source",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_switch_tool_keep_query",
+        "difficulty": "medium",
+        "what_it_tests": "Multi-turn: chuyển từ lookup sang social_search, giữ nguyên query 'quantum computing' từ context trước."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm trên web về quantum computing"
+        },
+        {
+          "role": "user",
+          "content": "Giờ tìm trên Twitter xem mọi người bàn gì về chủ đề này"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "quantum computing"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "APIStatusError: Error code: 402 - {'error': {'message': 'This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 16298. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account', 'code': 402, 'metadata': {'limit_source': 'openrouter_credits', 'remedy_hint': 'Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.', 'provider_name': None}}, 'user_id': 'user_3GvoxJBTbqfAZz02URqrIXltY78'}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G09_multi_no_tool_cancel",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_cancel_request",
+        "difficulty": "easy",
+        "what_it_tests": "Multi-turn: user hủy yêu cầu → không gọi tool nào, chỉ chấm turn cuối."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tweet của Bill Gates"
+        },
+        {
+          "role": "user",
+          "content": "À thôi không cần nữa, cảm ơn bạn"
+        }
+      ],
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "APIStatusError: Error code: 402 - {'error': {'message': 'This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 16298. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account', 'code': 402, 'metadata': {'limit_source': 'openrouter_credits', 'remedy_hint': 'Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.', 'provider_name': None}}, 'user_id': 'user_3GvoxJBTbqfAZz02URqrIXltY78'}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G10_multi_refine_timeframe",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_refine_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "Multi-turn: user mở rộng timeframe từ week→month, agent phải giữ query và topic, chỉ đổi timeframe, không thêm tool khác."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm trên web tin tức về chip AI trong tuần này"
+        },
+        {
+          "role": "user",
+          "content": "Tìm lại y hệt nhưng đổi thời gian sang tháng này"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "chip AI",
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "APIStatusError: Error code: 402 - {'error': {'message': 'This request requires more credits, or fewer max_tokens. You requested up to 16384 tokens, but can only afford 16298. To increase, visit https://openrouter.ai/settings/credits and upgrade to a paid account', 'code': 402, 'metadata': {'limit_source': 'openrouter_credits', 'remedy_hint': 'Add credits at https://openrouter.ai/settings/credits, or lower max_tokens / prompt size to fit your remaining balance.', 'provider_name': None}}, 'user_id': 'user_3GvoxJBTbqfAZz02URqrIXltY78'}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    }
+  ]
+}
