@@ -5,3 +5,5 @@ Thành viên nhóm
 3. Phạm Trung Kiên - 2A202601986
 4. Nguyễn Huy Anh - 2A202601641
 5. Nguyễn Văn Đại - 2A202601217
+6. Hà Tấn Phong	- 2A202601577
+7. Trần Quang Thành- 2A202601133
