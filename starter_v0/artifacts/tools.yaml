@@ -116,3 +116,14 @@ tools:
         max_pages: {type: integer, default: 5, description: "Số trang"}
         max_chars: {type: integer, default: 8000, description: "Số ký tự"}
       required: [arxiv_url]
+
+  - name: github
+    description: "Tìm kiếm repository trên GitHub theo từ khóa, ngôn ngữ lập trình, hoặc chủ đề."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Từ khóa tìm kiếm"}
+        sort: {type: string, enum: [best_match, stars, forks, updated], default: "best_match", description: "Sắp xếp theo"}
+        language: {type: string, default: "", description: "Ngôn ngữ lập trình (vd: python, javascript)"}
+        max_results: {type: integer, default: 5, description: "Số kết quả"}
+      required: [query]

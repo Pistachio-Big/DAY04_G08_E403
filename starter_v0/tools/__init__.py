@@ -16,6 +16,7 @@ from .format.tool import render_digest
 from .policy.tool import search_company_policy
 from .social_search.tool import search_tweets
 from .send.tool import send_telegram
+from .github.tool import github_search
 from .lookup.tool import web_search
 
 
@@ -35,6 +36,7 @@ TOOL_FUNCTIONS = {
     "policy": search_company_policy,
     "papers": arxiv_search,
     "paper_text": get_arxiv_paper_text,
+    "github": github_search,
 }
 
 
